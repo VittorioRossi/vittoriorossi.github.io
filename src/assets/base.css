@@ -1,0 +1,134 @@
+/* color palette from <https://github.com/vuejs/theme> */
+/* semantic color variables for this project */
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@100;200;300;400;500&display=swap');
+
+:root {
+  --color-background: #1E1E1E;
+  --color-secondary: #454545; 
+  --color-third: #00EE01; 
+
+  --color-heading: #FFFFFF;
+  --color-text: #8C8C8C;
+  --color-text-secondary: #000000;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+body {
+  min-height: 100vh;
+  color: var(--color-text);
+  background: var(--color-background);
+  transition: color 0.5s, background-color 0.5s;
+  line-height: 1.6;
+  font-family: Nunito, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 20px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+
+  overflow-y: auto;
+}
+
+h1 {
+  color: var(--color-heading);
+  font-weight: 100;
+  font-size: 100px;
+  letter-spacing: 10px;
+  
+}
+h2 {
+  font-style: normal;
+  font-size: 50px;
+  font-weight: 200;
+}
+
+h3 {
+  color: var(--color-heading);
+  font-style: normal;
+  font-size: 30px;
+  font-weight: 500;
+  letter-spacing: 2.5px;
+}
+h4 {
+  color: var(--color-heading);
+  font-size: normal;
+  font-size: 30px;
+  font-weight: 200;
+}
+
+
+p {
+  color: var(--color-heading);
+  font-size: 20px;
+}
+
+span {
+  color: var(--color-heading);
+  font-size: 20px;
+  font-weight: 200;
+}
+
+
+.section {
+  width: 100vw;
+  min-height: 100vh;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+.content {
+
+  height: 100%;
+
+  margin: 0px 100px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.btn {
+  color: var(--color-heading);
+  border: var(--color-third) solid 2px;
+
+  font-size: 500;
+  border-radius: 30px;
+
+
+  padding: 5px 20px;
+
+  width: fit-content;
+  transition: all 0.2s ease-in;
+}
+
+.btn:hover {
+  background-color: var(--color-third);
+  color: var(--color-text-secondary);
+}
+
+.title {
+  margin-top: 50px;
+  margin-left: 100px;
+}
+
+.title h1{
+  color: var(--color-heading);
+  font-weight: 200;
+  font-size: 75px; 
+  letter-spacing: 5px;
+}
+  
+.title h3 {
+  font-style: normal;
+  font-size: 25px;
+  font-weight: 200;
+  color: var(--color-third);
+}
