@@ -9,41 +9,37 @@
         
             <div class="skill-part"> 
 
-            <div class="skill-row">
-                <!-- icon -->
-                <div class="tile-container">
-                    <SkillTile imgSource="./src/assets/icons/tensorflow.png" title="Tensorflow"/>
-                    <SkillTile imgSource="./src/assets/icons/scikit.png" title="Scikit Learn"/>
+                <div class="skill-row">
+                    <!-- icon -->
+                    <div class="tile-container">
+                        <h3 class="heading">Machine learning</h3>
+                        <SkillTile imgSource="./src/assets/icons/python.png" title="Python"/>
+                        <SkillTile imgSource="./src/assets/icons/tensorflow.png" title="Tensorflow"/>
+                        <SkillTile imgSource="./src/assets/icons/scikit.png" title="Scikit Learn"/>
+                    </div>
+                </div>
 
+                <div class="skill-row">
+                    <!-- icon -->
+                    <div class="tile-container">
+                        <h3 class="heading">Back-end</h3>
+                        <SkillTile imgSource="./src/assets/icons/django.jpg" title="Django"/>
+                        <SkillTile imgSource="./src/assets/icons/flask.png" title="Flask"/>
+                    </div>
+                </div>
+
+                <div class="skill-row">
+                    <!-- icon -->
+                    <div class="tile-container">
+                        <h3 class="heading">Front-end</h3>
+                        <SkillTile imgSource="./src/assets/icons/js.png" title="JavaScript"/>
+                        <SkillTile imgSource="./src/assets/icons/vue.png" title="Vue.js"/>
+                    
+                        <SkillTile imgSource="./src/assets/icons/css.png" title="CSS"/>
+                    </div>
                 </div>
             </div>
 
-            <div class="skill-row">
-                <!-- icon -->
-                <div class="tile-container">
-                    <SkillTile imgSource="./src/assets/icons/django.jpg" title="Django"/>
-                    <SkillTile imgSource="./src/assets/icons/flask.png" title="Flask"/>
-                </div>
-            </div>
-
-            <div class="skill-row">
-                <!-- icon -->
-                <div class="tile-container">
-                    <SkillTile imgSource="./src/assets/icons/js.png" title="JavaScript"/>
-                    <SkillTile imgSource="./src/assets/icons/vue.png" title="Vue.js"/>
-                
-                    <SkillTile imgSource="./src/assets/icons/css.png" title="CSS"/>
-                </div>
-            </div>
-            </div>
-
-            <!-- 
-            <div class="skill-grid">
-                <SkillTile imgSource="./src/assets/icons/python.png" title="Python"/>
-        
-                <SkillTile imgSource="./src/assets/icons/numpy.png" title="Numpy"/>
-            </div>
-            -->
         </div>
     </div>
 </template>
@@ -77,8 +73,16 @@ export default {
     gap: 50px;
 }
 
+.skill-part {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
 .skill-row {
     display: flex;
+    
     width: 100%;
     height: 150px;
 
@@ -86,16 +90,32 @@ export default {
 }
 
 .tile-container {
+    position: relative;
     display: flex;
     flex-direction: row;
-    gap: 20px;
-
+    justify-content: center;
     align-items: center;
+
+    gap: 50px;
+
     padding: 0px 20px;
 
-    border: 5px solid var(--color-third);
-    border-radius: 20px;
+    border: 4px solid var(--color-third);
+    border-radius: 100px;   
+    width: 100%;
+}
+
+.heading {
+    position: absolute;
+    white-space: nowrap;
+    font-size: 20px;
+
+    padding: 0px 20px;
     
+    transform: translateX(-50%);
+    left: 50%;
+    top: -20px;
+    background-color: var(--color-background);
 }
 
 .skill-grid {

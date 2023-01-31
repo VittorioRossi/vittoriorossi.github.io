@@ -21,6 +21,9 @@
 
                 </p>
             </div>
+            <div class="side-image">
+                <img src="" alt="">
+            </div>
         </div>
     </div>
 </template>
@@ -36,10 +39,8 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-    
 
-
-    height: 100%;
+    height: 100vh;
 
     overflow-x: none;
 }
@@ -60,5 +61,6 @@ p {
     font-weight: bold; 
     border-bottom: 1px solid var(--color-third);
 }
+
 </style>
 
