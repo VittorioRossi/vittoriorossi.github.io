@@ -63,6 +63,10 @@ h4 {
   font-weight: 200;
 }
 
+a {
+  text-decoration: none;
+  color: var(--color-secondary);
+}
 
 p {
   color: var(--color-heading);
@@ -97,15 +101,17 @@ span {
 
 .btn {
   color: var(--color-heading);
+  background: transparent;
   border: var(--color-third) solid 2px;
 
   font-size: 500;
   border-radius: 30px;
 
-
   padding: 5px 20px;
 
   width: fit-content;
+  text-align: center;
+  
   transition: all 0.2s ease-in;
 }
 
