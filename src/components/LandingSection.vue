@@ -17,9 +17,6 @@
             </div>
         </div>
 
-        <div class="logo-background">
-
-        </div>
     </div>
 </template>
 

@@ -7,7 +7,7 @@
 
         <div class="content">
 
-            <form action="https://formsubmit.co/rossi.vittori@gmail.com" method="POST">
+            <form action="https://formsubmit.co/30a790847cce83fe3c32cc5a13467b83" method="POST">
                 <input class="input-field" type="text" name="name" id="name" required>
                 <div class="label-div">
                     <label for="name">Name</label>
@@ -30,31 +30,33 @@
                         trigger="loop"
                         delay="2000"
                         colors="primary:#00EE01,secondary:#00EE01"
-                        style="width:50px;height:50px;">
+                        style="width:100px;height:100px;">
                     </lord-icon>
                 </div>
             </form>
             
-            <div class="other-links">
-                <h4>
-                    Other links
-                </h4>
+
+            <div class="accounts">
+                <h3>My accounts</h3>
                 <a class = "btn" href="https://www.linkedin.com/in/vittorio-rossi-645749226/">Linkedin</a>
                 <a class = "btn" href="https://github.com/VittorioRossi">GitHub</a>
                 <a class = "btn" href="https://www.kaggle.com/vittoriorossi">Kaggle</a>
                 <a class = "btn" href="https://www.fiverr.com/vittoriorossi23">Fiverr</a>
-
-                <a class = "download__btn" href="./src/assets/file/CV-EN.pdf" download>
-                    <div class="btn">
-                    Download my CV - EN
-                    </div>
-                </a>
-                <a class = "download__btn" href="./src/assets/file/CV-EN.pdf" download>
-                    <div class="btn">
-                    Download my CV - IT
-                    </div>
-                </a>
-        </div>
+            </div>
+            
+            <!--
+            <h3>Download</h3>
+            <a class = "download__btn" href="./src/assets/file/CV-EN.pdf" download>
+                <div class="btn">
+                Download my CV - EN
+                </div>
+            </a>
+            <a class = "download__btn" href="./src/assets/file/CV-EN.pdf" download>
+                <div class="btn">
+                Download my CV - IT
+                </div>
+            </a>
+            -->
         </div>
     </div>
 </template>
@@ -77,8 +79,9 @@ export default {
 
 .content {
     display: flex;
-    flex-direction: column;
-    align-items:flex-start;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center ;
 }
 
 form {
@@ -134,6 +137,13 @@ label {
 .send-btn {
     display: flex;
     flex-direction: row;
+    width: 50%;
+    height: fit-content;
 }
 
+.accounts {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
 </style>
