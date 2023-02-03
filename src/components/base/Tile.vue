@@ -11,7 +11,7 @@
             {{ this.paragraph }}
         </p>
 
-        <div class="btn">
+        <div class="btn" @click="() => ToggleButton()">
             Read more
         </div>
     </div>
@@ -24,6 +24,7 @@ export default {
         imgSource: String,
         title: String,
         paragraph: String,
+        ToggleButton: Function
     },
 }
 </script>
