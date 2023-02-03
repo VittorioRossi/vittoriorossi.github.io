@@ -8,56 +8,62 @@
         <div class="content">
 
             <form action="https://formsubmit.co/30a790847cce83fe3c32cc5a13467b83" method="POST">
-                <input class="input-field" type="text" name="name" id="name" required>
-                <div class="label-div">
-                    <label for="name">Name</label>
+
+                <div class = "name__form">
+
+                    <div class="flex__col">
+                        <input class="input__field" type="text" name="name" id="name" required>
+                        <div class="input__label">
+                            <label for="name">Name</label>
+                        </div>
+                    </div>
+
+                    <div class="flex__col">
+                        <input class="input__field" type="email" name="email" id="email" required>
+                        <div class="input__label">
+                            <label for="email">E-mail</label>
+                        </div>
+                    </div>
                 </div>
-                <input class="input-field" type="email" name="email" id="email" required>
-                <div class="label-div">
-                    <label for="email">E-mail</label>
-                </div>
-                <textarea class="input-field" name="content" cols="20" rows="10" id="content" required></textarea>
-                <div class="label-div">
+            
+            
+                <textarea class="input__field" name="content" cols="15" rows="3" id="content" required></textarea>
+                <div class="input__label">
                     <label for="content">Your message</label>
                 </div>
-                
 
-                <div class="send-btn">
-                    <button type="submit" class="btn">Send</button>
+                <div class="send__btn">
+                    <button type="submit" class="btn">
+                            Send
+                    </button>
 
-                    <lord-icon
-                        src="https://cdn.lordicon.com/rhvddzym.json"
-                        trigger="loop"
-                        delay="2000"
-                        colors="primary:#00EE01,secondary:#00EE01"
-                        style="width:100px;height:100px;">
-                    </lord-icon>
+                   
                 </div>
             </form>
             
-
-            <div class="accounts">
-                <h3>My accounts</h3>
-                <a class = "btn" href="https://www.linkedin.com/in/vittorio-rossi-645749226/">Linkedin</a>
-                <a class = "btn" href="https://github.com/VittorioRossi">GitHub</a>
-                <a class = "btn" href="https://www.kaggle.com/vittoriorossi">Kaggle</a>
-                <a class = "btn" href="https://www.fiverr.com/vittoriorossi23">Fiverr</a>
-            </div>
-            
-            <!--
-            <h3>Download</h3>
-            <a class = "download__btn" href="./src/assets/file/CV-EN.pdf" download>
-                <div class="btn">
-                Download my CV - EN
-                </div>
-            </a>
-            <a class = "download__btn" href="./src/assets/file/CV-EN.pdf" download>
-                <div class="btn">
-                Download my CV - IT
-                </div>
-            </a>
-            -->
+            <lord-icon
+                    src="https://cdn.lordicon.com/zpxybbhl.json"
+                    trigger="hover"
+                    colors="primary:#ffffff,secondary:#00ee01"
+                    style="width:300px;height:300px">
+            </lord-icon>
         </div>
+
+        <div class="footer">
+                <div class="form__field">
+                    <h3>My accounts</h3>
+                    <a  href="https://www.linkedin.com/in/vittorio-rossi-645749226/">Linkedin</a>
+                    <a  href="https://github.com/VittorioRossi">GitHub</a>
+                    <a  href="https://www.kaggle.com/vittoriorossi">Kaggle</a>
+                    <a  href="https://www.fiverr.com/vittoriorossi23">Fiverr</a>
+                </div>
+
+                <div class="form__field">
+                    <h3>Downloads</h3>
+                    <a class = "download__btn grid-item" href="./src/assets/file/CV-EN.pdf" download>Download my CV - EN</a>
+                    <a class = "download__btn grid-item" href="./src/assets/file/CV-EN.pdf" download>Download my CV - IT</a>
+                </div>
+            </div>
     </div>
 </template>
 
@@ -80,19 +86,23 @@ export default {
 .content {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
-    align-items: center ;
+    justify-content: space-evenly;
+    align-items: center;
 }
 
 form {
-    width: 50%;
+    margin-top: 100px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    justify-content: center;
+    align-items: center;
+
+    gap: 40px;
 }
 
-.input-field {
+.input__field {
     font-family: Nunito, -apple-system, BlinkMacSystemFont, sans-serif;;
+    width: 100%;
 
     border: 0;
     outline: 0;
@@ -101,49 +111,86 @@ form {
     background-color: transparent;
 
     transition: border-color 0.2s;
+
+    resize: none;
+    font-size: 20px;
+    color: white;
 }
 
-.input-field:focus{
-    border-color: var(--color-third);
-}
-.input-field:placeholder-shown ~ label{
-    cursor: text;
-    top: 20px;
+.input__field:focus{
+    border-color: var(--color-third);   
 }
 
-.label-div {
+.input__label {
     position: relative;
+    width: 100%;
 }
 
-label {
-  position: absolute;
-  top: -55px;
-  transition: 0.2s;
-  font-size: 20px;
-  color: var(--color-secondary);
+.input__label > label {
+    position: absolute;
+    bottom: -10px;
+    transition: 0.2s;
+    font-size: 20px;
+    color: var(--color-secondary);
+    white-space: nowrap;
 }
 
-.download__btn {
-    text-align: center;
-    justify-content: center;
-    margin: 10px 0px  0px !important;
-    padding: 15px;
-    width: 200px;
-    height: 15px;
-    font-size: 15px;
-
+.flex__col > .input__label > label {
+  bottom: -40px;
 }
 
-.send-btn {
+.input__field:focus ~ .input__label > label{
+    color: var(--color-third);   
+}
+.send__btn {
+    width: 100%;
     display: flex;
     flex-direction: row;
-    width: 50%;
+
+    justify-content: right;
+    align-items: center;
+
     height: fit-content;
 }
 
-.accounts {
+
+.form__field {
+    height: 100%;
     display: flex;
     flex-direction: column;
-    gap: 40px;
+    justify-content: flex-start;
+
+    gap: 5px;
 }
+
+
+.name__form {
+    display: flex;
+    gap: 100px;
+}
+
+.name__form > .input__label > input {
+    width: 100%;
+}
+
+.footer {
+    margin-top: 10px;
+    padding: 10px;
+    height: 25vh;
+    background-color: black;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+}
+
+.form__field > h3 {
+    font-size: 20px;
+}
+.form__field > a {
+    font-size: 15px;
+}
+
+
 </style>

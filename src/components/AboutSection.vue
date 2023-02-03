@@ -46,7 +46,7 @@ export default {
 
 p {
     font-weight: 300;
-    font-size: 16px;
+    font-size: 18px;
 }
 
 
@@ -57,7 +57,7 @@ p {
 }
 
 .highlight {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
     border-bottom: 1px solid var(--color-third);
 }
@@ -81,9 +81,10 @@ p {
     border-radius: 20px;
     height: 50vh;
 
-    padding: 5
-    0px;
+    padding: 50px;
     gap: 50px;
+
+    
 }
 </style>
 

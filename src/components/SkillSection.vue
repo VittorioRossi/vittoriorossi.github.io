@@ -100,7 +100,6 @@ export default {
 
     padding: 0px 20px;
 
-    border: 4px solid var(--color-third);
     border-radius: 100px;   
     width: 100%;
 }
