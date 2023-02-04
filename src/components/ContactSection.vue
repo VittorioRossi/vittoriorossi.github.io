@@ -80,6 +80,8 @@ export default {
 .contacts {
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
 }
 
 .content {
@@ -87,7 +89,6 @@ export default {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 0;
 }
 
 form {
