@@ -69,21 +69,4 @@ export default {
     color: var(--color-third);
   }
 }
-
-
-.logo-background {
-    background-image: url('./src/assets/icons/green_logo.svg');
-    background-size: contain;
-    image-rendering: optimizeQuality;
-    background-repeat: no-repeat;
-    position: absolute;
-    color: var(--color-secondary);
-
-    width: 400px;
-    height: 400px;
-
-    right: 100px;
-
-    opacity: 0.25;
-}
 </style>

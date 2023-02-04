@@ -34,7 +34,6 @@
                         <h3 class="heading">Front-end</h3>
                         <SkillTile imgSource="/src/assets/icons/js.png" title="JavaScript"/>
                         <SkillTile imgSource="/src/assets/icons/vue.png" title="Vue.js"/>
-                    
                         <SkillTile imgSource="/src/assets/icons/css.png" title="CSS"/>
                     </div>
                 </div>
