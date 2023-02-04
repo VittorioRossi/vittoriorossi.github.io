@@ -7,21 +7,21 @@
 
         <div class="content">
             <Tile 
-                imgSource = "./src/assets/icons/green_logo.svg"
+                imgSource = "/src/assets/icons/green_logo.svg"
                 title = "My portfolio"
                 paragraph = "My portfolio website to present myself to clients and recruiter"
                 :ToggleButton = "() => ToggleOverlay('project1')"
             />
 
             <Tile 
-                imgSource = "src/assets/icons/universal-dot-white.png"
+                imgSource = "/src/assets/icons/universal-dot-white.png"
                 title = "Task matching"
                 paragraph = "A NLP based recommendation system to match task to freelancers"
                 :ToggleButton = "() => ToggleOverlay('project2')"
             />
 
             <Tile 
-                imgSource = "./src/assets/icons/content-moderation.png"
+                imgSource = "/src/assets/icons/content-moderation.png"
                 title = "Text moderation"
                 paragraph = "A content moderation piepline built with Spacy and served with FastApi"
                 :ToggleButton = "() => ToggleOverlay('project3')"
@@ -61,9 +61,9 @@
             </h2>
         </div>  
         <div class="skill__used">
-            <SkillTile imgSource="./src/assets/icons/python.png" title="Python"/>
-                        <SkillTile imgSource="./src/assets/icons/tensorflow.png" title="Tensorflow"/>
-                        <SkillTile imgSource="./src/assets/icons/numpy.png" title="Pandas"/>
+            <SkillTile imgSource="/src/assets/icons/python.png" title="Python"/>
+            <SkillTile imgSource="/src/assets/icons/tensorflow.png" title="Tensorflow"/>
+            <SkillTile imgSource="/src/assets/icons/numpy.png" title="Pandas"/>
         </div>
 
         <p>
