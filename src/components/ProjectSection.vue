@@ -7,21 +7,21 @@
 
         <div class="content">
             <Tile 
-                imgSource = "/src/assets/icons/green_logo.svg"
+                :imgSource = "GreenLogoImage"
                 title = "My portfolio"
                 paragraph = "My portfolio website to present myself to clients and recruiter"
                 :ToggleButton = "() => ToggleOverlay('project1')"
             />
 
             <Tile 
-                imgSource = "/src/assets/icons/universal-dot-white.png"
+                :imgSource = "UniversalImage"
                 title = "Task matching"
                 paragraph = "A NLP based recommendation system to match task to freelancers"
                 :ToggleButton = "() => ToggleOverlay('project2')"
             />
 
             <Tile 
-                imgSource = "/src/assets/icons/content-moderation.png"
+                :imgSource = "ContentModImage"
                 title = "Text moderation"
                 paragraph = "A content moderation piepline built with Spacy and served with FastApi"
                 :ToggleButton = "() => ToggleOverlay('project3')"
@@ -36,9 +36,9 @@
             </h2>
         </div>  
         <div class="skill__used">
-            <SkillTile imgSource="/src/assets/icons/js.png" title="JavaScript"/>
-            <SkillTile imgSource="/src/assets/icons/vue.png" title="Vue.js"/>        
-            <SkillTile imgSource="/src/assets/icons/css.png" title="CSS"/>
+            <SkillTile :imgSource="JsImage" title="JavaScript"/>
+            <SkillTile :imgSource="VueImage" title="Vue.js"/>        
+            <SkillTile :imgSource="CSSImage" title="CSS"/>
         </div>
 
         <p>
@@ -61,9 +61,8 @@
             </h2>
         </div>  
         <div class="skill__used">
-            <SkillTile imgSource="/src/assets/icons/python.png" title="Python"/>
-            <SkillTile imgSource="/src/assets/icons/tensorflow.png" title="Tensorflow"/>
-            <SkillTile imgSource="/src/assets/icons/numpy.png" title="Pandas"/>
+            <SkillTile :imgSource="PythonImage" title="Python"/>
+            <SkillTile :imgSource="TensorflowImage" title="Tensorflow"/>
         </div>
 
         <p>
@@ -108,6 +107,19 @@
 </template>
 
 <script>
+import FlaskImage from '../assets/icons/flask.png';
+import JsImage from '../assets/icons/js.png';
+import PythonImage from '../assets/icons/python.png';
+import VueImage from '../assets/icons/vue.png';
+import CSSImage from '../assets/icons/css.png';
+import DjangoImage from '../assets/icons/django.jpg';
+import ScikitImage from '../assets/icons/scikit.png';
+import TensorflowImage from '../assets/icons/tensorflow.png';
+import GreenLogoImage from '../assets/icons/green_logo.svg';
+import UniversalImage from '../assets/icons/universal-dot-white.png';
+import ContentModImage from '../assets/icons/content-moderation.png';
+
+
 import Tile from './base/Tile.vue';
 import ProjectOverlay from './base/ProjectOverlay.vue';
 import SkillTile from './base/SkillTile.vue';
@@ -128,6 +140,18 @@ export default {
         return {
             btnTrigger,
             ToggleOverlay,
+
+            FlaskImage,
+            PythonImage,
+            JsImage,
+            VueImage,
+            CSSImage,
+            DjangoImage,
+            ScikitImage,
+            TensorflowImage,
+            GreenLogoImage,
+            UniversalImage,
+            ContentModImage
         }
     },
     components: {

@@ -13,9 +13,9 @@
                     <!-- icon -->
                     <div class="tile-container">
                         <h3 class="heading">Machine learning</h3>
-                        <SkillTile imgSource="/src/assets/icons/python.png" title="Python"/>
-                        <SkillTile imgSource="/src/assets/icons/tensorflow.png" title="Tensorflow"/>
-                        <SkillTile imgSource="/src/assets/icons/scikit.png" title="Scikit Learn"/>
+                        <SkillTile :imgSource="PythonImage" title="Python"/>
+                        <SkillTile :imgSource="TensorflowImage" title="Tensorflow"/>
+                        <SkillTile :imgSource="ScikitImage" title="Scikit Learn"/>
                     </div>
                 </div>
 
@@ -23,8 +23,8 @@
                     <!-- icon -->
                     <div class="tile-container">
                         <h3 class="heading">Back-end</h3>
-                        <SkillTile imgSource="/src/assets/icons/django.jpg" title="Django"/>
-                        <SkillTile imgSource="/src/assets/icons/flask.png" title="Flask"/>
+                        <SkillTile :imgSource="DjangoImage" title="Django"/>
+                        <SkillTile :imgSource="FlaskImage" title="Flask"/>
                     </div>
                 </div>
 
@@ -32,9 +32,9 @@
                     <!-- icon -->
                     <div class="tile-container">
                         <h3 class="heading">Front-end</h3>
-                        <SkillTile imgSource="/src/assets/icons/js.png" title="JavaScript"/>
-                        <SkillTile imgSource="/src/assets/icons/vue.png" title="Vue.js"/>
-                        <SkillTile imgSource="/src/assets/icons/css.png" title="CSS"/>
+                        <SkillTile :imgSource="JsImage" title="JavaScript"/>
+                        <SkillTile :imgSource="VueImage" title="Vue.js"/>
+                        <SkillTile :imgSource="CSSImage" title="CSS"/>
                     </div>
                 </div>
             </div>
@@ -46,8 +46,30 @@
 <script>
 import SkillTile from './base/SkillTile.vue';
 
+import FlaskImage from '../assets/icons/flask.png';
+import JsImage from '../assets/icons/js.png';
+import VueImage from '../assets/icons/vue.png';
+import CSSImage from '../assets/icons/css.png';
+import DjangoImage from '../assets/icons/django.jpg';
+import ScikitImage from '../assets/icons/scikit.png';
+import TensorflowImage from '../assets/icons/tensorflow.png';
+import PythonImage from '../assets/icons/python.png';
+
+
 export default {
     name:"skills",
+    setup() {
+        return {
+            FlaskImage,
+            JsImage,
+            VueImage,
+            CSSImage,
+            DjangoImage,
+            ScikitImage,
+            TensorflowImage,
+            PythonImage
+        }
+    },
     components: {
         SkillTile,
     },
