@@ -36,9 +36,9 @@
             </h2>
         </div>  
         <div class="skill__used">
-            <SkillTile imgSource="./src/assets/icons/js.png" title="JavaScript"/>
-            <SkillTile imgSource="./src/assets/icons/vue.png" title="Vue.js"/>        
-            <SkillTile imgSource="./src/assets/icons/css.png" title="CSS"/>
+            <SkillTile imgSource="/src/assets/icons/js.png" title="JavaScript"/>
+            <SkillTile imgSource="/src/assets/icons/vue.png" title="Vue.js"/>        
+            <SkillTile imgSource="/src/assets/icons/css.png" title="CSS"/>
         </div>
 
         <p>

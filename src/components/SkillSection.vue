@@ -13,9 +13,9 @@
                     <!-- icon -->
                     <div class="tile-container">
                         <h3 class="heading">Machine learning</h3>
-                        <SkillTile imgSource="./src/assets/icons/python.png" title="Python"/>
-                        <SkillTile imgSource="./src/assets/icons/tensorflow.png" title="Tensorflow"/>
-                        <SkillTile imgSource="./src/assets/icons/scikit.png" title="Scikit Learn"/>
+                        <SkillTile imgSource="/src/assets/icons/python.png" title="Python"/>
+                        <SkillTile imgSource="/src/assets/icons/tensorflow.png" title="Tensorflow"/>
+                        <SkillTile imgSource="/src/assets/icons/scikit.png" title="Scikit Learn"/>
                     </div>
                 </div>
 
@@ -23,8 +23,8 @@
                     <!-- icon -->
                     <div class="tile-container">
                         <h3 class="heading">Back-end</h3>
-                        <SkillTile imgSource="./src/assets/icons/django.jpg" title="Django"/>
-                        <SkillTile imgSource="./src/assets/icons/flask.png" title="Flask"/>
+                        <SkillTile imgSource="/src/assets/icons/django.jpg" title="Django"/>
+                        <SkillTile imgSource="/src/assets/icons/flask.png" title="Flask"/>
                     </div>
                 </div>
 
@@ -32,10 +32,10 @@
                     <!-- icon -->
                     <div class="tile-container">
                         <h3 class="heading">Front-end</h3>
-                        <SkillTile imgSource="./src/assets/icons/js.png" title="JavaScript"/>
-                        <SkillTile imgSource="./src/assets/icons/vue.png" title="Vue.js"/>
+                        <SkillTile imgSource="/src/assets/icons/js.png" title="JavaScript"/>
+                        <SkillTile imgSource="/src/assets/icons/vue.png" title="Vue.js"/>
                     
-                        <SkillTile imgSource="./src/assets/icons/css.png" title="CSS"/>
+                        <SkillTile imgSource="/src/assets/icons/css.png" title="CSS"/>
                     </div>
                 </div>
             </div>
