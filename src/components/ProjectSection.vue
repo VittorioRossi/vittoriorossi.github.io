@@ -30,7 +30,7 @@
     </div>
     <project-overlay v-if="btnTrigger.project1" :ToggleButton="() =>  ToggleOverlay('project1')">
         <div class="heading">
-            <img class="project__image" src="/src/assets/picture/portfolio-website.jpeg" alt="">
+            <img class="project__image" src="/src/assets/picture/portfolio-website.jpeg" alt="" style = "transform: translateY(-30%);">
             <h2>
                 My portfolio
             </h2>
@@ -177,7 +177,7 @@ export default {
     top: 0;
     left: 0;
     
-    height: 50vh;
+    height: 30vw;
     width: 100%;
 
     display: flex;
@@ -185,22 +185,22 @@ export default {
     overflow: hidden;
 }
 
+.heading .project__image {
+    position: relative;
+    top:0;
+    left:0;
 
-h2 {
+    object-fit: cover;
+}
+
+.heading h2 {
     position: absolute;
-    top: 35vh;
+    bottom: 0px;
     width: 100%;
     text-align: center;
     color: white;
 
     background-color: rgb(0, 0, 0, 0.25);
-}
-.project__image {
-    position: relative;
-    top:0;
-    left:0;
-
-    object-fit: scale-down;
 }
 
 .skill__used {
@@ -210,16 +210,19 @@ h2 {
     align-items: center;
     gap: 50px;
     margin: 20px;
+
+    height: fit-content;
 }
+
 p {
     text-align: justify;
-    margin: 0px 50px;
+    margin: 0px 10vw;
 }
-.links { 
-    margin: 50px;
+.links {
+    margin: 10vw;
     display: flex;
     flex-direction: row;
-    gap: 50px;
+    gap: 5vw;
     width: 100%;
     justify-content: flex-start;
     align-items: center;
@@ -232,6 +235,9 @@ ul {
     .content {
         flex-direction: column;
         flex-wrap: nowrap;
+    }
+    .skill__used {
+        width: 100%;
     }
 }
 </style>
