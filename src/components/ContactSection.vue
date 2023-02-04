@@ -80,14 +80,14 @@ export default {
 .contacts {
     display: flex;
     flex-direction: column;
-    overflow-x: none;
 }
 
 .content {
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: space-between;
     align-items: center;
+    margin-bottom: 0;
 }
 
 form {
@@ -174,14 +174,14 @@ form {
 }
 
 .footer {
-    margin-top: 10px;
-    padding: 10px;
-    height: 25vh;
+    margin-top: 20px;
+    padding: 20px;
+    height: 100%;
     background-color: black;
     display: flex;
     flex-direction: row;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     gap: 50px;
 }
 

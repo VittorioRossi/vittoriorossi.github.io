@@ -7,7 +7,7 @@
 
         <div class="content">
             <div class="container">
-                <img class = "side-image" src="/src/assets/picture/about.png" alt="">
+                <img class = "picture side-image" src="/src/assets/picture/about.png" alt="">
                 <div class="text">
                     <h3 style = "font-weight: 300;">
                     Hi everyone,
@@ -63,9 +63,8 @@ p {
 }
 
 .side-image {
-    image-rendering: optimizeQuality;
-    aspect-ratio: 2 / 3;
-    height: 50vh;
+    height: inherit;
+    width: inherit;
 }
 
 .container {
@@ -75,16 +74,36 @@ p {
     align-items: center;
 
     background-color: var(--color-secondary);
-    height: 50%;
 
     padding: 50px;
     border-radius: 20px;
     height: 50vh;
 
-    padding: 50px;
     gap: 50px;
+}
 
-    
+@media screen and (max-width:600px) {
+    .container {
+        margin: 5vw 0px;
+        flex-direction: column-reverse;
+        gap: 0;
+        height: fit-content;
+        padding-bottom: 0;
+    }
+    h3 {
+        font-size: 20px;
+    }
+    .highlight {
+        font-size: 15px;
+    }
+    p {
+        font-size: 12px;
+    }
+    .side-image {
+        position: relative;
+        bottom: 0px;
+        width: 30vw;
+    }
 }
 </style>
 

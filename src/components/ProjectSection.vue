@@ -171,7 +171,6 @@ export default {
     display: flex;
     flex-direction: column;
     
-    height: 100vh;
 }
 .heading {
     position: relative;
@@ -227,5 +226,12 @@ p {
 }
 ul {
     margin:15px 0px;
+}
+
+@media screen and (max-width:600px) {
+    .content {
+        flex-direction: column;
+        flex-wrap: nowrap;
+    }
 }
 </style>

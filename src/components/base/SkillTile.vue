@@ -26,6 +26,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
+    
 
     background-color: var(--color-secondary);
     width: 100px;
@@ -34,8 +35,10 @@ export default {
 
     transition: all 0.5s;
 }
-.skill-tile img {
-    width: 70px;
+.skill-tile > img {
+    width: 70%;
+    object-fit: cover;
+    
     backface-visibility: hidden;
 
     transition: all 0.5s;
@@ -79,4 +82,14 @@ export default {
     opacity: 100%;
 }
 
+
+@media screen and (max-width: 600px) {
+    .skill-tile {
+        width: 10vh;
+        height: 10vh;
+        aspect-ratio: 1 / 1;
+    }
+
+    
+}
 </style>

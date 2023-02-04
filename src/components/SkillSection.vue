@@ -79,11 +79,9 @@ export default {
 
 
 <style scoped>
-
 .skills {
     display: flex;
     flex-direction: column;
-    overflow: visible;
 }
 
 .content {
@@ -99,6 +97,7 @@ export default {
     flex-direction: column;
     gap: 20px;
     width: 100%;
+    max-height: 70vh;
 }
 
 .skill-row {
@@ -135,13 +134,22 @@ export default {
     transform: translateX(-50%);
     left: 50%;
     top: -20px;
-    background-color: var(--color-background);
 }
+@media screen and (max-width:600px) {
+    .skills {
+        gap: 10vh;
+    }
+    .content {
+        gap: 10vh;
+    }
+    .heading {
+        font-size: 15px;
+        top:0px;
+        padding: 0px 10px;
 
-.skill-grid {
-    display: grid;
-    gap: 50px;
-    grid-template-columns:repeat(3, 1fr);
-    grid-template-rows:repeat(3, 1fr);
+    }
+    .tile-container {
+        gap: 5vh;
+    }
 }
 </style>

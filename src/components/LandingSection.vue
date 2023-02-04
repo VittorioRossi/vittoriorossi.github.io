@@ -64,9 +64,7 @@ export default {
 
     transition: all 0.5s;
 }
-@media (hover: hover) {
-  a:hover {
+a:hover {
     color: var(--color-third);
-  }
 }
 </style>
