@@ -15,7 +15,7 @@
                     <p>
                         I am <span class="highlight">Vittorio Rossi</span> a second year student at Bocconi Univeristy where in 2024 
                         I am going to graduate in Economics, Managment and Computer Science.
-                        I have been into computers since I was I little child and my parents bought me a PC for my birthday. I started programming when I was
+                        I have been into computers since I was little child and my parents bought me a PC for my birthday. I started programming when I was
                         <span class="highlight">15 years old</span>, playing around with python and pygame.
                         In the summer of 2020, after months of studing machine learning, I decided to get involved in the real game, so I started my <span class="highlight">freelancing</span> career on fiverr offering Tensorflow related gigs.
                     </p>

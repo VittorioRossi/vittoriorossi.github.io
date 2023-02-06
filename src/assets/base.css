@@ -121,8 +121,8 @@ span {
 }
 
 .title {
-  margin-top: 50px;
-  margin-left: 100px;
+  margin-top: 10vh;
+  margin-left: 10vw;
   height: fit-content;
   width: 100%;
 }
@@ -182,13 +182,13 @@ span {
   }
 
   h2 {
-    font-size: 16px;
+    font-size: 24px;
   }
   h3, h4 {
-    font-size: 12px;
+    font-size: 16px;
   }
   p, span, .btn, a {
-    font-size: 10px;
+    font-size: 12px;
   }
 
   .content {

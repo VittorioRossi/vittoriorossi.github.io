@@ -1,6 +1,6 @@
 <template>
     <div class="landing" id="landing">
-        <h2 class="text-slider">AI enthusiast</h2>
+        <h2 class="text-slider">Machine learning engineer</h2>
         <h1>VITTORIO ROSSI</h1>
 
 

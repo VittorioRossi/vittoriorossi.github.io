@@ -48,7 +48,6 @@
         </p>
 
         <div class="links">
-            <span>Links:</span>
             <a class="btn" href="https://github.com/VittorioRossi/portfolio">Code</a>
         </div>
     </project-overlay>
@@ -79,7 +78,6 @@
             I have worked on the development, training, fine-tunning and serving of the ScaNN model that allowed to search the space of tasks with a text input.
         </p>
         <div class="links">
-            <span>Links:</span>
             <a class="btn" href="https://github.com/UniversalDot/tensorflow">My code</a>
             <a class = "btn" href="https://tfhub.dev/universaldot/udot_scann/1">Model on TF hub</a>
         </div>
@@ -87,7 +85,7 @@
 
     <project-overlay v-if="btnTrigger.project3" :ToggleButton="() => ToggleOverlay('project3')" >
         <div class="heading">
-            <img class="project__image" src="/src/assets/picture/content-moderation.jpeg" alt="" style = "transform: translateY(-200px);">
+            <img class="project__image" src="/src/assets/picture/content-moderation.jpeg" alt="" style = "transform: translateY(-150px);">
             <h2>
                 Content moderation with Spacy
             </h2>
@@ -100,7 +98,6 @@
             Work in progress
         </p>     
         <div class="links">
-            <span>Links:</span>
         </div>  
     </project-overlay>
 
@@ -219,12 +216,12 @@ p {
     margin: 0px 10vw;
 }
 .links {
-    margin: 10vw;
+    margin: 5vh 0px;
     display: flex;
     flex-direction: row;
     gap: 5vw;
     width: 100%;
-    justify-content: flex-start;
+    justify-content: center;
     align-items: center;
 }
 ul {

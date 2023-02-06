@@ -25,6 +25,7 @@
                         <h3 class="heading">Back-end</h3>
                         <SkillTile :imgSource="DjangoImage" title="Django"/>
                         <SkillTile :imgSource="FlaskImage" title="Flask"/>
+                        <SkillTile :imgSource="FastApiImage" title="FastApi"/>
                     </div>
                 </div>
 
@@ -54,6 +55,7 @@ import DjangoImage from '../assets/icons/django.jpg';
 import ScikitImage from '../assets/icons/scikit.png';
 import TensorflowImage from '../assets/icons/tensorflow.png';
 import PythonImage from '../assets/icons/python.png';
+import FastApiImage from '../assets/icons/fastapi.svg'
 
 
 export default {
@@ -67,7 +69,8 @@ export default {
             DjangoImage,
             ScikitImage,
             TensorflowImage,
-            PythonImage
+            PythonImage,
+            FastApiImage
         }
     },
     components: {

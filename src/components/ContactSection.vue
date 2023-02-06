@@ -26,32 +26,25 @@
                     </div>
                 </div>
             
-            
-                <textarea class="input__field" name="content" cols="15" rows="3" id="content" required></textarea>
-                <div class="input__label">
-                    <label for="content">Your message</label>
-                </div>
+                
+                <div class="textarea__from">
+                    <textarea class="input__field" name="content" cols="15" rows="5" id="content" required></textarea>
+                    <div class="input__label">
+                        <label for="content">Your message</label>
+                    </div>
 
-                <div class="send__btn">
                     <button type="submit" class="btn">
-                            Send
-                    </button>
-
-                   
+                        Send
+                    </button>                   
                 </div>
+
             </form>
             
-            <lord-icon
-                    src="https://cdn.lordicon.com/zpxybbhl.json"
-                    trigger="hover"
-                    colors="primary:#ffffff,secondary:#00ee01"
-                    style="width:300px;height:300px">
-            </lord-icon>
         </div>
 
         <div class="footer">
                 <div class="form__field">
-                    <h3>My accounts</h3>
+                    <h5>My accounts</h5>
                     <a  href="https://www.linkedin.com/in/vittorio-rossi-645749226/">Linkedin</a>
                     <a  href="https://github.com/VittorioRossi">GitHub</a>
                     <a  href="https://www.kaggle.com/vittoriorossi">Kaggle</a>
@@ -59,7 +52,7 @@
                 </div>
 
                 <div class="form__field">
-                    <h3>Downloads</h3>
+                    <h5>Downloads</h5>
                     <a class = "download__btn grid-item" href="./src/assets/file/CV-EN.pdf" download>Download my CV - EN</a>
                     <a class = "download__btn grid-item" href="./src/assets/file/CV-EN.pdf" download>Download my CV - IT</a>
                 </div>
@@ -87,35 +80,37 @@ export default {
 .content {
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
 }
 
 form {
-    margin-top: 100px;
+    margin-top: 4vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
 
-    gap: 40px;
+    gap: 5vh;
 }
 
 .input__field {
-    font-family: Nunito, -apple-system, BlinkMacSystemFont, sans-serif;;
+    box-sizing: border-box;
     width: 100%;
-
     border: 0;
     outline: 0;
     border-bottom: 2px solid var(--color-text);
+    border-radius: 20px;
+    padding: 10px 15px;
+
+    background-color: var(--color-secondary);
+    resize: none;
+
+    font-size: 20px;
+    font-family: Nunito, -apple-system, BlinkMacSystemFont, sans-serif;;
     color: var(--color-text);
-    background-color: transparent;
 
     transition: border-color 0.2s;
-
-    resize: none;
-    font-size: 20px;
-    color: white;
 }
 
 .input__field:focus{
@@ -125,11 +120,15 @@ form {
 .input__label {
     position: relative;
     width: 100%;
+    height: 100%;
 }
 
 .input__label > label {
+    width: 100%;
+    height: 100%;
+
     position: absolute;
-    bottom: -10px;
+    top: 0;
     transition: 0.2s;
     font-size: 20px;
     color: var(--color-secondary);
@@ -143,17 +142,6 @@ form {
 .input__field:focus ~ .input__label > label{
     color: var(--color-third);   
 }
-.send__btn {
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-
-    justify-content: right;
-    align-items: center;
-
-    height: fit-content;
-}
-
 
 .form__field {
     height: 100%;
@@ -173,9 +161,22 @@ form {
 .name__form > .input__label > input {
     width: 100%;
 }
+.textarea__from {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+.textarea__from > button {
+    position: absolute;
+    bottom: 3vh;
+    right: 1vw;
+
+    min-width: fit-content;
+    width: 6vw;
+}
 
 .footer {
-    margin-top: 20px;
+    margin-top: 10vh;
     padding: 20px;
     height: 100%;
     background-color: black;
@@ -193,5 +194,10 @@ form {
     font-size: 15px;
 }
 
+h5 {
+    color: var(--color-text);
+    font-weight: 300;
+    letter-spacing: 2px;
+}
 
 </style>

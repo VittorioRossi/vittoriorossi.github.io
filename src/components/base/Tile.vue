@@ -42,8 +42,8 @@ export default {
     gap: 10px;
 
 
-    width: 350px;
-    height: 350px;
+    width: 370px;
+    height: 370px;
     
     background-color: var(--color-secondary);
     border-radius: 20px;
