@@ -112,7 +112,7 @@ import CSSImage from '../assets/icons/css.png';
 import DjangoImage from '../assets/icons/django.jpg';
 import ScikitImage from '../assets/icons/scikit.png';
 import TensorflowImage from '../assets/icons/tensorflow.png';
-import GreenLogoImage from '../assets/icons/green_logo.svg';
+import GreenLogoImage from '../assets/icons/new-dark.png';
 import UniversalImage from '../assets/icons/universal-dot-white.png';
 import ContentModImage from '../assets/icons/content-moderation.png';
 
