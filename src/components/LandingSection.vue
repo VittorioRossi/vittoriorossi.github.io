@@ -1,5 +1,7 @@
 <template>
     <div class="landing" id="landing">
+        <Blob class="blob1" />
+        <Blob class="blob2" />
         <h2 class="text-slider">Machine learning engineer</h2>
         <h1>VITTORIO ROSSI</h1>
 
@@ -21,8 +23,13 @@
 </template>
 
 <script>
+import Blob from './base/Blob.vue';
+
 export default {
     name:"landing",
+    components: {
+        Blob
+    }
 }
 
 </script>
@@ -33,12 +40,30 @@ export default {
 .landing {
     display: flex;
     flex-direction: column;
-
     align-items: center;
     justify-content: center;
     height: 100vh;
+    position: relative; /* Needed for positioning blobs */
+    overflow: hidden; /* Prevents blobs from going outside */
+}
 
-    overflow-x: none;
+.blob1 {
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    width: 400px;
+    height: 400px;
+    animation-duration: 10s, 20s;
+}
+
+.blob2 {
+    position: absolute;
+    bottom: 10%;
+    right: 10%;
+    width: 300px;
+    height: 300px;
+    animation-duration: 12s, 25s;
+    animation-delay: 2s, 2s;
 }
 
 .actions {

@@ -10,7 +10,7 @@
         </div>
         <div class="section">
             <ProjectSection></ProjectSection>
-        </div>        
+        </div>
 
         <div class="section">
             <SkillSection></SkillSection>

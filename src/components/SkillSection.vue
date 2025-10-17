@@ -6,71 +6,36 @@
         </div>
 
         <div class="content">
-        
             <div class="skill-part"> 
-
-                <div class="skill-row">
-                    <!-- icon -->
+                <div 
+                    v-for="category in skillCategories"
+                    :key="category.id"
+                    class="skill-row"
+                >
                     <div class="tile-container">
-                        <h3 class="heading">Machine learning</h3>
-                        <SkillTile :imgSource="PythonImage" title="Python"/>
-                        <SkillTile :imgSource="TensorflowImage" title="Tensorflow"/>
-                        <SkillTile :imgSource="ScikitImage" title="Scikit Learn"/>
-                    </div>
-                </div>
-
-                <div class="skill-row">
-                    <!-- icon -->
-                    <div class="tile-container">
-                        <h3 class="heading">Back-end</h3>
-                        <SkillTile :imgSource="DjangoImage" title="Django"/>
-                        <SkillTile :imgSource="FlaskImage" title="Flask"/>
-                        <SkillTile :imgSource="FastApiImage" title="FastApi"/>
-                    </div>
-                </div>
-
-                <div class="skill-row">
-                    <!-- icon -->
-                    <div class="tile-container">
-                        <h3 class="heading">Front-end</h3>
-                        <SkillTile :imgSource="JsImage" title="JavaScript"/>
-                        <SkillTile :imgSource="VueImage" title="Vue.js"/>
-                        <SkillTile :imgSource="CSSImage" title="CSS"/>
+                        <h3 class="heading">{{ category.title }}</h3>
+                        <SkillTile 
+                            v-for="skill in category.skills"
+                            :key="skill.name"
+                            :imgSource="skill.icon" 
+                            :title="skill.name"
+                        />
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </template>
 
 <script>
 import SkillTile from './base/SkillTile.vue';
-
-import FlaskImage from '../assets/icons/flask.png';
-import JsImage from '../assets/icons/js.png';
-import VueImage from '../assets/icons/vue.png';
-import CSSImage from '../assets/icons/css.png';
-import DjangoImage from '../assets/icons/django.jpg';
-import ScikitImage from '../assets/icons/scikit.png';
-import TensorflowImage from '../assets/icons/tensorflow.png';
-import PythonImage from '../assets/icons/python.png';
-import FastApiImage from '../assets/icons/fastapi.svg'
-
+import skillCategories from '../data/skills.js';
 
 export default {
     name:"skills",
     setup() {
         return {
-            FlaskImage,
-            JsImage,
-            VueImage,
-            CSSImage,
-            DjangoImage,
-            ScikitImage,
-            TensorflowImage,
-            PythonImage,
-            FastApiImage
+            skillCategories
         }
     },
     components: {

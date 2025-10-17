@@ -1,162 +1,57 @@
 <template>
-    <div class="project" id="projects">
-        <div class="title">
-            <h3>My works</h3>
-            <h1>Projects</h1>
+    <div>
+        <div class="project" id="projects">
+            <div class="title">
+                <h3>My works</h3>
+                <h1>Projects</h1>
+            </div>
+
+            <div class="content">
+                <Tile 
+                    v-for="project in projectsData"
+                    :key="project.id"
+                    :imgSource="project.icon"
+                    :title="project.title"
+                    :paragraph="project.description"
+                    :ToggleButton="() => ToggleOverlay(project.id)"
+                />
+            </div>
         </div>
-
-        <div class="content">
-            <Tile 
-                :imgSource = "GreenLogoImage"
-                title = "My portfolio"
-                paragraph = "My portfolio website to present myself to clients and recruiter"
-                :ToggleButton = "() => ToggleOverlay('project1')"
-            />
-
-            <Tile 
-                :imgSource = "UniversalImage"
-                title = "Task matching"
-                paragraph = "A NLP based recommendation system to match task to freelancers"
-                :ToggleButton = "() => ToggleOverlay('project2')"
-            />
-
-            <Tile 
-                :imgSource = "ContentModImage"
-                title = "Text moderation"
-                paragraph = "A content moderation piepline built with Spacy and served with FastApi"
-                :ToggleButton = "() => ToggleOverlay('project3')"
-            />
-        </div>
+        <Transition name="fade">
+            <project-overlay v-if="activeProject" :project="activeProject" :ToggleButton="closeOverlay">
+            </project-overlay>
+        </Transition>
     </div>
-    <project-overlay v-if="btnTrigger.project1" :ToggleButton="() =>  ToggleOverlay('project1')">
-        <div class="heading">
-            <img class="project__image" src="/src/assets/picture/portfolio-website.jpeg" alt="" style = "transform: translateY(-30%);">
-            <h2>
-                My portfolio
-            </h2>
-        </div>  
-        <div class="skill__used">
-            <SkillTile :imgSource="JsImage" title="JavaScript"/>
-            <SkillTile :imgSource="VueImage" title="Vue.js"/>        
-            <SkillTile :imgSource="CSSImage" title="CSS"/>
-        </div>
-
-        <p>
-            This project had the goal to create a protfolio website to showcase my work.
-            <br>
-            It also turned out to be a nice challenge in order to test and improve my front-end skills.
-        </p>
-
-        <div class="links">
-            <a class="btn" href="https://github.com/VittorioRossi/portfolio">Code</a>
-        </div>
-    </project-overlay>
-
-    <project-overlay v-if="btnTrigger.project2" :ToggleButton="() => ToggleOverlay('project2')">
-        <div class="heading">
-            <img class="project__image" src="/src/assets/picture/recommedation-project.jpeg" alt="" style = "transform: translateY(-50px);">
-            <h2>
-                NLP based recommendation system
-            </h2>
-        </div>  
-        <div class="skill__used">
-            <SkillTile :imgSource="PythonImage" title="Python"/>
-            <SkillTile :imgSource="TensorflowImage" title="Tensorflow"/>
-        </div>
-
-        <p>
-            The UniversalDot foundation hired me to build a robust recommendation system that could match freelancer's profiles with task organisation published.
-            <br>
-            The team decided to use several natural language processing techniques in order to address this problem, coming up with the following pipeline:
-            <ul>
-                <li>Preprocessing with Spacy</li>
-                <li>Keyword extraction</li>
-                <li>Embedding</li>
-                <li>Indexing with ScaNN model</li>
-            </ul>
-
-            I have worked on the development, training, fine-tunning and serving of the ScaNN model that allowed to search the space of tasks with a text input.
-        </p>
-        <div class="links">
-            <a class="btn" href="https://github.com/UniversalDot/tensorflow">My code</a>
-            <a class = "btn" href="https://tfhub.dev/universaldot/udot_scann/1">Model on TF hub</a>
-        </div>
-    </project-overlay>
-
-    <project-overlay v-if="btnTrigger.project3" :ToggleButton="() => ToggleOverlay('project3')" >
-        <div class="heading">
-            <img class="project__image" src="/src/assets/picture/content-moderation.jpeg" alt="" style = "transform: translateY(-150px);">
-            <h2>
-                Content moderation with Spacy
-            </h2>
-        </div>  
-        <div class="skill__used">
-
-        </div>
-
-        <p>
-            Work in progress
-        </p>     
-        <div class="links">
-        </div>  
-    </project-overlay>
-
-</template>
-
-<script>
-import FlaskImage from '../assets/icons/flask.png';
-import JsImage from '../assets/icons/js.png';
-import PythonImage from '../assets/icons/python.png';
-import VueImage from '../assets/icons/vue.png';
-import CSSImage from '../assets/icons/css.png';
-import DjangoImage from '../assets/icons/django.jpg';
-import ScikitImage from '../assets/icons/scikit.png';
-import TensorflowImage from '../assets/icons/tensorflow.png';
-import GreenLogoImage from '../assets/icons/new-dark.png';
-import UniversalImage from '../assets/icons/universal-dot-white.png';
-import ContentModImage from '../assets/icons/content-moderation.png';
-
-
+</template><script setup>
 import Tile from './base/Tile.vue';
 import ProjectOverlay from './base/ProjectOverlay.vue';
-import SkillTile from './base/SkillTile.vue';
-import { ref } from "vue"
-export default {
-    name:"project",
-    setup () {
-        const btnTrigger = ref({
-            project1:false,
-            project2:false,
-            project3:false,
-        })
+import { ref, computed } from "vue"
+import projects from '../data/projects.js';
 
-        const ToggleOverlay = (projectName) => {
-            btnTrigger.value[projectName] = !btnTrigger.value[projectName]
-        }
+// Defensive programming - ensure projects is an array
+const projectsData = Array.isArray(projects) ? projects : [];
 
-        return {
-            btnTrigger,
-            ToggleOverlay,
+// State to hold the ID of the currently active project
+const activeProjectId = ref(null);
 
-            FlaskImage,
-            PythonImage,
-            JsImage,
-            VueImage,
-            CSSImage,
-            DjangoImage,
-            ScikitImage,
-            TensorflowImage,
-            GreenLogoImage,
-            UniversalImage,
-            ContentModImage
-        }
-    },
-    components: {
-        Tile,
-        ProjectOverlay,
-        SkillTile,
-    },
-}
+// Computed property to get the active project object
+const activeProject = computed(() => {
+    return projectsData.find(p => p.id === activeProjectId.value);
+});
+
+// Function to toggle the overlay
+const ToggleOverlay = (projectId) => {
+    if (activeProjectId.value === projectId) {
+        activeProjectId.value = null; // Close if clicking the same project
+    } else {
+        activeProjectId.value = projectId; // Open new project
+    }
+};
+
+// Function to close the overlay (can be passed to the overlay component)
+const closeOverlay = () => {
+    activeProjectId.value = null;
+};
 
 </script>
 
@@ -215,6 +110,14 @@ p {
     text-align: justify;
     margin: 0px 10vw;
 }
+
+.project-content {
+    margin: 0px 10vw;
+}
+
+.project-content p {
+    margin: 15px 0px;
+}
 .links {
     margin: 5vh 0px;
     display: flex;
@@ -226,6 +129,16 @@ p {
 }
 ul {
     margin:15px 0px;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.8s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
 }
 
 @media screen and (max-width:600px) {
