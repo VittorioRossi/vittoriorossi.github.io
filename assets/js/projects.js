@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
             image: "assets/images/diffusion-preview.png", // Placeholder for future image
             highlight: true, // Mark this project as highlighted
             buttons: [
-                { text: "Read Paper", url: "assets/pdf/more_efficient_text_diffusion_via_length_prediction.pdf", primary: true },
+                { text: "Read Paper", url: "pdf/more_efficient_text_diffusion_via_length_prediction.pdf", primary: true },
                 { text: "See Code on Github", url: "https://github.com/giacomo-ciro/diffusion-llms", primary: false }
             ]
         },
@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
             link: "https://github.com/VittorioRossi/llms-for-ts",
             image: "assets/images/forecasting-preview.png", // Placeholder for future image
             buttons: [
-                { text: "Read Thesis", url: "assets/pdf/undergrad_thesis.pdf", primary: true },
+                { text: "Read Thesis", url: "pdf/undergrad_thesis.pdf", primary: true },
                 { text: "See Code on GitHub", url: "https://github.com/VittorioRossi/llms-for-ts", primary: false }
             ]
         },
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
             link: "https://github.com/VittorioRossi/crowd-flow-estimation",
             image: "assets/images/crowd-flow-preview.png", // Placeholder for future image
             buttons: [
-                { text: "Read reserach", url: "assets/pdf/cv_flux_prediction.pdf", primary: true },
+                { text: "Read reserach", url: "pdf/cv_flux_prediction.pdf", primary: true },
                 { text: "See Code on GitHub", url: "https://github.com/VittorioRossi/crowd-flow-estimation", primary: false }
             ]
         }
