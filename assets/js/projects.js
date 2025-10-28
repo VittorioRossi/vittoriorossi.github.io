@@ -35,13 +35,13 @@ document.addEventListener('DOMContentLoaded', () => {
             title: "LLM Forecasters - Zero-Shot Time Series Forecasting",
             category: "BSc Thesis",
             description: "Investigated LLMs as zero-shot forecasting models against traditional methods and developed a novel benchmark to evaluate this emerging capability.",
-            keyResult: "Demonstrated that LLMs can outperform traditional models like ARIMA and Prophet in specific zero-shot scenarios, establishing a new benchmark for evaluation.",
-            tags: ["Time Series", "LLMs", "Zero-Shot Learning", "ARIMA", "Prophet", "Python"],
+            keyResult: "Demonstrated that LLMs can outperform traditional models like ARIMA in specific zero-shot scenarios, establishing a new benchmark for evaluation.",
+            tags: ["Time Series", "LLMs", "Zero-Shot Learning", "ARIMA", "Python"],
             id: "llm-forecasters",
             link: "https://github.com/VittorioRossi/llms-for-ts",
             image: "assets/images/forecasting-preview.png", // Placeholder for future image
             buttons: [
-                { text: "Read Thesis", url: "assets/pdf/cv_flux_prediction.pdf", primary: true },
+                { text: "Read Thesis", url: "assets/pdf/undergrad_thesis.pdf", primary: true },
                 { text: "See Code on GitHub", url: "https://github.com/VittorioRossi/llms-for-ts", primary: false }
             ]
         },
@@ -84,10 +84,9 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    // Initialize carousel functionality first to create infinite array
-    initializeCarousel();
 
-    // --- 3. TILE CREATION FUNCTION ---
+
+    // --- 4. TILE CREATION FUNCTION ---
     // Creates a single project tile element from a project data object.
     function createProjectTile(project, index) {
         const isHighlighted = project.highlight === true;
@@ -195,369 +194,40 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(tile);
     });
 
-    // --- 5. INTEGRATED CAROUSEL FUNCTIONALITY ---
-    function initializeCarousel() {
-        const container = document.getElementById('projects-container');
-        const prevBtn = document.getElementById('prev-arrow');
-        const nextBtn = document.getElementById('next-arrow');
-        const dotsContainer = document.getElementById('carousel-dots');
+    // --- 5. GRID POPULATION FUNCTION ---
+    function populateProjectsGrid() {
+        // Clear existing content
+        projectsContainer.innerHTML = '';
         
-        if (!container || !prevBtn || !nextBtn || !dotsContainer) {
-            console.error('Carousel elements not found');
-            return;
-        }
+        // Create and append each project tile
+        projectsData.forEach((project, index) => {
+            const tile = createProjectTile(project, index);
+            projectsContainer.appendChild(tile);
+        });
 
-        let currentIndex = 0;
-        const totalProjects = projectsData.length;
-
-        // --- INFINITE CAROUSEL SETUP ---
-        // Create infinite array by duplicating projects to ensure smooth looping
-        let infiniteProjects = [];
-        let actualCurrentIndex = 0; // Real index in original projectsData
-        const BUFFER_SIZE = 2; // Number of items to duplicate on each side
-
-        function createInfiniteArray() {
-            infiniteProjects = [];
-            
-            // Add buffer items from the end
-            for (let i = totalProjects - BUFFER_SIZE; i < totalProjects; i++) {
-                infiniteProjects.push({ ...projectsData[i], isClone: true, originalIndex: i });
-            }
-            
-            // Add all original items
-            for (let i = 0; i < totalProjects; i++) {
-                infiniteProjects.push({ ...projectsData[i], isClone: false, originalIndex: i });
-            }
-            
-            // Add buffer items from the beginning
-            for (let i = 0; i < BUFFER_SIZE; i++) {
-                infiniteProjects.push({ ...projectsData[i], isClone: true, originalIndex: i });
-            }
-            
-            // Set starting position to first real item (after buffer)
-            currentIndex = BUFFER_SIZE;
-            actualCurrentIndex = 0;
-        }
-
-        function populateInfiniteTiles() {
-            // Clear existing tiles
-            container.innerHTML = '';
-            
-            // Generate tiles for infinite array
-            infiniteProjects.forEach((project, index) => {
-                const projectElement = createProjectTile(project, index);
-                container.appendChild(projectElement);
-            });
-        }
-
-        function checkAndResetPosition() {
-            // If we're at the beginning buffer, jump to the end of real items
-            if (currentIndex < BUFFER_SIZE) {
-                currentIndex = totalProjects + (currentIndex);
-                container.style.transform = '';
-                setTimeout(() => updateProjectPositions(), 10);
-            }
-            // If we're at the end buffer, jump to the beginning of real items
-            else if (currentIndex >= totalProjects + BUFFER_SIZE) {
-                currentIndex = BUFFER_SIZE + (currentIndex - totalProjects - BUFFER_SIZE);
-                container.style.transform = '';
-                setTimeout(() => updateProjectPositions(), 10);
-            }
-            
-            // Update actual current index for dot navigation
-            actualCurrentIndex = ((currentIndex - BUFFER_SIZE) + totalProjects) % totalProjects;
-        }
-
-        // --- CAROUSEL CONFIGURATION ---
-        // Abstract configuration for easy dimension changes
-        // To modify project dimensions, simply update the values below:
-        const carouselConfig = {
-            breakpoints: {
-                large: { minWidth: 1200, tileWidth: 650, spacing: 120 },     // Wider tiles for large screens (1200px+)
-                medium: { minWidth: 768, tileWidth: 580, spacing: 100 },     // Wider tiles for medium screens (768px-1199px)
-                small: { minWidth: 0, tileWidth: 500, spacing: 80 }          // Wider tiles for small screens (<768px)
-            },
-            // Minimum padding from screen edges to prevent overflow
-            minPadding: 40
-        };
-
-        // Helper function to get responsive dimensions
-        function getResponsiveDimensions(viewportWidth) {
-            const { breakpoints, minPadding } = carouselConfig;
-            
-            let config;
-            if (viewportWidth >= breakpoints.large.minWidth) {
-                config = breakpoints.large;
-            } else if (viewportWidth >= breakpoints.medium.minWidth) {
-                config = breakpoints.medium;
-            } else {
-                config = breakpoints.small;
-            }
-            
-            // Ensure tile width doesn't exceed viewport minus padding
-            const maxTileWidth = viewportWidth - (minPadding * 2);
-            const tileWidth = Math.min(config.tileWidth, maxTileWidth);
-            
-            return {
-                tileWidth,
-                spacing: config.spacing,
-                containerWidth: viewportWidth
-            };
-        }
-
-        // Helper function to update carousel configuration (for easy dimension changes)
-        function updateCarouselConfig(newConfig) {
-            Object.assign(carouselConfig, newConfig);
-            updateProjectPositions(); // Reapply with new dimensions
-        }
-
-        // Expose configuration functions globally for debugging/customization
-        window.updateCarouselDimensions = updateCarouselConfig;
-        window.getCarouselConfig = () => carouselConfig;
-        window.getCurrentDimensions = () => getResponsiveDimensions(window.innerWidth);
-        
-        // Test animation function
-        window.testCarouselAnimation = () => {
-            console.log('🧪 Testing carousel animation...');
-            const originalIndex = currentIndex;
-            goNext();
-            setTimeout(() => {
-                goPrevious();
-                setTimeout(() => {
-                    currentIndex = originalIndex;
-                    updateProjectPositions();
-                }, 1000);
-            }, 1000);
-        };
-        
-        // Test depth scaling specifically
-        window.testDepthScaling = () => {
-            const tiles = document.querySelectorAll('.project-tile');
-            console.log('🔍 Testing depth scaling manually...');
-            
-            tiles.forEach((tile, index) => {
-                console.log(`Tile ${index}:`, {
-                    classes: tile.className,
-                    computedTransform: getComputedStyle(tile).transform,
-                    computedOpacity: getComputedStyle(tile).opacity,
-                    computedFilter: getComputedStyle(tile).filter
-                });
-            });
-        };
-
-        // Debug infinite carousel state
-        window.debugInfiniteCarousel = () => {
-            console.log('🔄 Infinite Carousel Debug:', {
-                currentIndex,
-                actualCurrentIndex,
-                totalProjects,
-                infiniteArrayLength: infiniteProjects.length,
-                bufferSize: BUFFER_SIZE,
-                infiniteProjects: infiniteProjects.map((p, i) => ({
-                    index: i,
-                    title: p.title.substring(0, 20) + '...',
-                    isClone: p.isClone,
-                    originalIndex: p.originalIndex
-                }))
-            });
-        };
-        
-        // Debug function to log current carousel state
-        window.debugCarousel = () => {
-            const dims = getResponsiveDimensions(window.innerWidth);
-            const highlightedTiles = document.querySelectorAll('.highlight-project-animation');
-            const regularTiles = document.querySelectorAll('.project-tile:not(.highlight-project-animation)');
-            const allTiles = document.querySelectorAll('.project-tile');
-            
-            console.log('🎠 Carousel Debug Info:', {
-                viewport: window.innerWidth,
-                config: carouselConfig,
-                currentDimensions: dims,
-                currentIndex,
-                totalProjects,
-                highlightedTilesCount: highlightedTiles.length,
-                regularTilesCount: regularTiles.length,
-                tileClasses: Array.from(allTiles).map((tile, index) => ({
-                    index,
-                    classes: tile.className,
-                    computedTransform: getComputedStyle(tile).transform,
-                    computedOpacity: getComputedStyle(tile).opacity,
-                    isHighlighted: tile.classList.contains('highlight-project-animation')
-                }))
-            });
-        };
-
-        // Create navigation dots
-        function createDots() {
-            dotsContainer.innerHTML = '';
-            for (let i = 0; i < totalProjects; i++) {
-                const dot = document.createElement('div');
-                dot.className = `carousel-dot ${i === 0 ? 'active' : ''}`;
-                dot.addEventListener('click', () => goToProject(i));
-                dotsContainer.appendChild(dot);
-            }
-        }
-
-        // Update project positions and effects using abstracted configuration
-        function updateProjectPositions() {
-            const projectTiles = container.querySelectorAll('.project-tile');
-            const viewportWidth = window.innerWidth;
-            
-            // Get responsive dimensions from configuration
-            const { tileWidth, spacing, containerWidth } = getResponsiveDimensions(viewportWidth);
-            
-            // Calculate offset to center the current project in the middle of the viewport
-            const centerOffset = (containerWidth - tileWidth) / 2;
-            const translateX = centerOffset - (currentIndex * (tileWidth + spacing));
-            
-            // Apply transformations
-            container.style.transform = `translateX(${translateX}px)`;
-            container.style.gap = `${spacing}px`;
-            
-            // Apply responsive dimensions and depth effects to all tiles
-            projectTiles.forEach((tile, index) => {
-                // Set uniform width for all tiles (both primary and non-primary, highlighted and regular)
-                tile.style.width = `${tileWidth}px`;
-                tile.style.maxWidth = `${tileWidth}px`; // Override any CSS max-width constraints
-                tile.style.minWidth = `${tileWidth}px`; // Ensure consistent width
-                tile.style.flexShrink = '0'; // Prevent shrinking
-                
-                // Apply depth-based classes
-                const distance = Math.abs(index - currentIndex);
-                tile.classList.remove('center', 'side', 'far');
-                
-                if (distance === 0) {
-                    tile.classList.add('center');
-                } else if (distance === 1) {
-                    tile.classList.add('side');
-                } else {
-                    tile.classList.add('far');
+        // Set up scroll animation observer
+        const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    obs.unobserve(entry.target);
                 }
             });
-            
-            updateDots();
-        }
-
-        // Update active dot based on actual current index
-        function updateDots() {
-            const dots = dotsContainer.querySelectorAll('.carousel-dot');
-            dots.forEach((dot, index) => {
-                dot.classList.toggle('active', index === actualCurrentIndex);
-            });
-        }
-
-        // Go to specific project (for dot navigation)
-        function goToProject(index) {
-            currentIndex = BUFFER_SIZE + index;
-            actualCurrentIndex = index;
-            updateProjectPositions();
-        }
-
-        // Navigation handlers for infinite carousel
-        function goNext() {
-            currentIndex++;
-            updateProjectPositions();
-            // Check if we need to reset position after animation
-            setTimeout(checkAndResetPosition, 50);
-        }
-
-        function goPrevious() {
-            currentIndex--;
-            updateProjectPositions();
-            // Check if we need to reset position after animation
-            setTimeout(checkAndResetPosition, 50);
-        }
-
-
-
-        // Event listeners
-        prevBtn.addEventListener('click', goPrevious);
-        nextBtn.addEventListener('click', goNext);
-
-        // Keyboard navigation - only left/right arrows
-        document.addEventListener('keydown', (e) => {
-            // Only respond to carousel navigation when focused on projects section
-            if (!document.querySelector('#projects:hover') && document.activeElement.id !== 'projects') return;
-            
-            switch(e.key) {
-                case 'ArrowLeft':
-                    e.preventDefault();
-                    goPrevious();
-                    break;
-                case 'ArrowRight':
-                    e.preventDefault();
-                    goNext();
-                    break;
-            }
+        }, {
+            threshold: 0.1,
+            rootMargin: "0px 0px -50px 0px"
         });
 
-        // Mouse wheel navigation when over projects section
-        const projectsSection = document.getElementById('projects');
-        projectsSection.addEventListener('wheel', (e) => {
-            // Only respond to horizontal scroll
-            if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-                e.preventDefault();
-                if (e.deltaX > 10) {
-                    goNext();
-                } else if (e.deltaX < -10) {
-                    goPrevious();
-                }
-            }
+        // Observe all tiles for animation
+        const allTiles = projectsContainer.querySelectorAll('.project-tile');
+        allTiles.forEach(tile => {
+            observer.observe(tile);
         });
-
-        // Touch/swipe support on projects section
-        let startX = 0;
-        let startY = 0;
-
-        projectsSection.addEventListener('touchstart', (e) => {
-            startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
-        });
-
-        projectsSection.addEventListener('touchend', (e) => {
-            const endX = e.changedTouches[0].clientX;
-            const endY = e.changedTouches[0].clientY;
-            const diffX = startX - endX;
-            const diffY = startY - endY;
-            
-            // Only handle horizontal swipes for navigation
-            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
-                if (diffX > 0) {
-                    goNext();
-                } else {
-                    goPrevious();
-                }
-            }
-        });
-
-        // Window resize handler to maintain centering and responsiveness
-        window.addEventListener('resize', () => {
-            // Debounce resize events for better performance
-            clearTimeout(window.resizeTimeout);
-            window.resizeTimeout = setTimeout(() => {
-                updateProjectPositions();
-            }, 100);
-        });
-
-        // Initialize infinite carousel
-        createInfiniteArray();
-        populateInfiniteTiles();
-        createDots();
-        
-        // Set initial index to highlighted project in infinite array
-        const highlightedIndex = projectsData.findIndex(project => project.highlight);
-        if (highlightedIndex !== -1) {
-            currentIndex = BUFFER_SIZE + highlightedIndex;
-            actualCurrentIndex = highlightedIndex;
-        }
-        
-        // Force initial positioning to ensure all tiles get proper dimensions
-        updateProjectPositions();
-        
-        // Force a final dimension update after a brief delay to override any CSS conflicts
-        setTimeout(() => {
-            updateProjectPositions();
-        }, 50);
     }
+
+
+
+    // Initialize the grid
+    populateProjectsGrid();
 
 });
