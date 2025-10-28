@@ -180,9 +180,6 @@
             justify-items: center;
             align-items: start;
             width: 100%;
-            max-width: 1600px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
             box-sizing: border-box;
             /* Responsive grid columns and gaps */
             grid-template-columns: repeat(2, minmax(280px, 1fr));
@@ -200,7 +197,6 @@
         @media (min-width: 1200px) {
             .grid-container {
                 gap: 3rem; /* 48px gap for large screens */
-                padding: 2rem 2rem;
             }
             .project-tile {
                 max-width: 650px;
@@ -221,7 +217,6 @@
             .grid-container {
                 grid-template-columns: 1fr; /* Single column on mobile */
                 gap: 2rem; /* 32px gap for mobile */
-                padding: 1rem;
             }
             .project-tile {
                 max-width: 500px;
@@ -282,6 +277,115 @@
 
         
         /* Projects section is now always visible */
+        
+        /* Enhanced mobile margins and spacing */
+        @media (max-width: 640px) {
+            /* Increase hero section padding on mobile */
+            .relative.min-h-screen.flex.flex-col {
+                padding: 2rem !important; /* 32px instead of 16px */
+            }
+            
+            /* Increase spacing between hero elements on mobile */
+            .text-center.mb-12 {
+                margin-bottom: 2rem !important; /* Tighter on mobile */
+            }
+            
+            .flex.flex-col.sm\\:flex-row.gap-4.items-center.mb-16 {
+                margin-bottom: 2.5rem !important; /* Adjust CTA spacing */
+            }
+            
+            /* Increase main container padding on mobile */
+            main {
+                padding-left: 3rem !important; /* 48px - much more generous */
+                padding-right: 3rem !important;
+                padding-top: 3rem !important; /* 48px instead of default */
+                padding-bottom: 3rem !important;
+            }
+            
+            /* Increase section margins on mobile */
+            #about, #projects {
+                margin-bottom: 3rem !important; /* 48px instead of default */
+            }
+            
+            /* Increase title margins on mobile */
+            .section-title {
+                margin-bottom: 2rem !important; /* 32px instead of 32px, keep same but ensure consistency */
+            }
+            
+            /* Ensure project section title has proper responsive sizing */
+            #projects .section-title {
+                font-size: 2.5rem !important; /* Ensure it's readable on mobile */
+                line-height: 1.2 !important;
+                margin-bottom: 2rem !important;
+            }
+            
+            /* Increase spacing in about text on mobile */
+            #about div {
+                margin-top: 2rem !important;
+            }
+            
+            /* Ensure project tiles have proper margins on mobile */
+            .project-tile {
+                margin-bottom: 2rem !important;
+            }
+            
+            /* Fix project tile titles on mobile */
+            .project-tile h3 {
+                font-size: 1.5rem !important; /* Ensure project titles are readable */
+                line-height: 1.3 !important;
+                margin-bottom: 1rem !important;
+            }
+            
+            .project-tile p {
+                font-size: 0.95rem !important; /* Slightly smaller but still readable */
+                line-height: 1.5 !important;
+            }
+            
+            /* Increase grid gap on mobile */
+            .grid-container {
+                gap: 2.5rem !important; /* More space between project tiles */
+            }
+        }
+        
+        @media (min-width: 641px) and (max-width: 768px) {
+            /* Tablet margins - slightly less than mobile but more than desktop */
+            .relative.min-h-screen.flex.flex-col {
+                padding: 2.5rem !important; /* 40px */
+            }
+            
+            main {
+                padding-left: 3.5rem !important; /* 56px - more generous for tablets */
+                padding-right: 3.5rem !important;
+                padding-top: 4rem !important; /* 64px */
+                padding-bottom: 4rem !important;
+            }
+            
+            #about, #projects {
+                margin-bottom: 4rem !important; /* 64px */
+            }
+            
+            .grid-container {
+                gap: 2.75rem !important; /* Moderate gap for tablets */
+            }
+        }
+        
+        /* Additional mobile typography improvements */
+        @media (max-width: 640px) {
+            /* Ensure proper spacing for title elements */
+            h1, h2 {
+                margin-bottom: 1.5rem !important;
+            }
+            
+            /* Add more space around paragraphs */
+            p {
+                margin-bottom: 1.25rem !important;
+            }
+            
+            /* Ensure buttons have proper spacing */
+            .glow-border {
+                margin: 0.5rem !important;
+            }
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -335,7 +439,7 @@
         
         <!-- About Section -->
         <section id="about" class="mb-24 md:mb-32 scroll-mt-20">
-            <h2 class="section-title font-display text-7xl md:text-6xl font-bold text-gray-50 mb-8">About me</h2>
+            <h2 class="section-title font-display text-5xl md:text-6xl font-bold text-gray-50 mb-8">About me</h2>
             <div class="text-gray-300 text-xl md:text-2xl space-y-10 max-w-7xl tracking-widest" style="line-height: 1.5;">
                 <p>
                     <strong class="text-gray-50 font-semibold">Tackling significant, complex problems</strong> is my only aspiration in life. I am passionate about using <strong class="text-gray-50 font-semibold">software and artificial intelligence</strong> not just as a tool, but as a foundation for building <strong class="text-gray-50 font-semibold">robust, intelligent systems</strong> that can generate a positive impact and help create a more efficient and abundant world.
@@ -346,21 +450,17 @@
             </div>
         </section>
 
-    </main>
-
-    <!-- Projects Section - Full Width Carousel -->
-    <section id="projects" class="w-full mb-12 md:mb-24 scroll-mt-20">
-        <div class="w-full max-w-5xl mx-auto mb-16">
-            <h2 class="section-title font-display text-4xl md:text-5xl font-bold text-gray-50 text-center">Projects</h2>
-        </div>
-        
-        <!-- Projects Grid Container -->
-        <div class="w-full max-w-7xl mx-auto">
+        <!-- Projects Section -->
+        <section id="projects" class="mb-24 md:mb-32 scroll-mt-20">
+            <h2 class="section-title font-display text-5xl md:text-6xl font-bold text-gray-50 mb-8">Projects</h2>
+            
+            <!-- Projects Grid Container -->
             <div id="projects-container" class="grid-container">
                 <!-- Projects will be dynamically inserted here -->
             </div>
-        </div>
-    </section>
+        </section>
+
+    </main>
 
     <footer class="text-center py-8 text-gray-500">
         <p>&copy; 2025 Vittorio Rossi. All rights reserved.</p>
