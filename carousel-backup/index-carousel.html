@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vittorio Rossi | Researcher</title>
+    <link rel="icon" href="assets/logo.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a;
+            color: #e5e7eb; /* A slightly off-white for better readability */
+        }
+        .font-display {
+            font-family: 'Raleway', sans-serif;
+        }
+        #starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            /* The blurred green orbs from your example, recreated with gradients */
+            background-image: 
+                radial-gradient(circle at 15% 25%, rgba(68, 255, 171, 0.08), transparent 40%),
+                radial-gradient(circle at 85% 75%, rgba(68, 255, 171, 0.06), transparent 40%);
+        }
+        /* Custom styles for glowing effects and borders */
+        .glow-border {
+            border-color: rgba(68, 255, 171, 0.6);
+            box-shadow: 0 0 5px rgba(68, 255, 171, 0.3), 0 0 10px rgba(68, 255, 171, 0.2);
+            transition: all 0.3s ease;
+        }
+        .glow-border:hover {
+            border-color: rgba(68, 255, 171, 1);
+            box-shadow: 0 0 15px rgba(68, 255, 171, 0.5), 0 0 25px rgba(68, 255, 171, 0.3);
+            transform: translateY(-2px);
+        }
+        .nav-link {
+            position: relative;
+            color: #9ca3af;
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover {
+            color: #44ffab;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            transform: scaleX(0);
+            height: 1px;
+            bottom: -4px;
+            left: 0;
+            background-color: #44ffab;
+            transform-origin: bottom right;
+            transition: transform 0.3s ease-out;
+        }
+        .nav-link:hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+        .section-title {
+            position: relative;
+            display: inline-block;
+            padding-bottom: 0.5rem;
+            margin-bottom: 2rem;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 40%;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(68, 255, 171, 0.8) 0%, rgba(68, 255, 171, 0) 100%);
+        }
+        /* Glassmorphism effect for cards */
+        .glass-card {
+            background: rgba(24, 24, 27, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1rem;
+        }
+        .project-tile {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+
+        .project-tile.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .icon-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 56px; /* Increased size */
+            height: 56px; /* Increased size */
+            border-radius: 50%;
+            border: 1px solid rgba(68, 255, 171, 0.4); /* More subtle border */
+            color: rgba(229, 231, 235, 0.7); /* Softer icon color */
+            transition: all 0.3s ease;
+            /* A more "lucid" glow */
+            box-shadow: 0 0 12px rgba(68, 255, 171, 0.15);
+        }
+        .icon-link:hover {
+            color: #ffffff;
+            background-color: rgba(68, 255, 171, 0.1);
+            border-color: rgba(68, 255, 171, 0.8);
+            box-shadow: 0 0 20px rgba(68, 255, 171, 0.4);
+            transform: translateY(-3px) scale(1.05); /* Enhanced hover effect */
+        }
+        
+        /* Primary button animation */
+        @keyframes gentle-pulse {
+            0%, 100% {
+                transform: translateY(0px);
+                box-shadow: 0 0 5px rgba(68, 255, 171, 0.3), 0 0 10px rgba(68, 255, 171, 0.2);
+            }
+            50% {
+                transform: translateY(-1px);
+                box-shadow: 0 0 8px rgba(68, 255, 171, 0.4), 0 0 15px rgba(68, 255, 171, 0.3);
+            }
+        }
+        
+        .primary-btn-animation {
+            animation: gentle-pulse 2.5s ease-in-out infinite;
+            box-shadow: 0 0 5px rgba(68, 255, 171, 0.3), 0 0 10px rgba(68, 255, 171, 0.2);
+        }
+        
+        .primary-btn-animation:hover {
+            animation-play-state: paused;
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 0 12px rgba(68, 255, 171, 0.5), 0 0 20px rgba(68, 255, 171, 0.4);
+        }
+        
+        /* Highlight project animation - only affects glow, not transform */
+        @keyframes highlight-pulse {
+            0%, 100% {
+                box-shadow: 0 0 10px rgba(68, 255, 171, 0.4), 0 0 20px rgba(68, 255, 171, 0.3), 0 0 30px rgba(68, 255, 171, 0.2);
+                border-color: rgba(68, 255, 171, 0.6);
+            }
+            50% {
+                box-shadow: 0 0 15px rgba(68, 255, 171, 0.5), 0 0 25px rgba(68, 255, 171, 0.4), 0 0 35px rgba(68, 255, 171, 0.3);
+                border-color: rgba(68, 255, 171, 0.8);
+            }
+        }
+        
+        .highlight-project-animation {
+            animation: highlight-pulse 2s ease-in-out infinite;
+            border: 2px solid rgba(68, 255, 171, 0.6);
+            box-shadow: 0 0 10px rgba(68, 255, 171, 0.4), 0 0 20px rgba(68, 255, 171, 0.3);
+            /* Animation only affects box-shadow and border-color, not transform */
+        }
+        
+        .highlight-project-animation:hover {
+            animation-play-state: paused;
+            box-shadow: 0 0 20px rgba(68, 255, 171, 0.6), 0 0 30px rgba(68, 255, 171, 0.5), 0 0 40px rgba(68, 255, 171, 0.4);
+            border-color: rgba(68, 255, 171, 1);
+        }
+        
+        /* Enhanced hover transforms for highlighted projects - work with depth scaling */
+        #projects-container .project-tile.center.highlight-project-animation:hover {
+            transform: scale(1.05);
+        }
+        
+        #projects-container .project-tile.side.highlight-project-animation:hover {
+            transform: scale(0.75);
+        }
+        
+        #projects-container .project-tile.far.highlight-project-animation:hover {
+            transform: scale(0.55);
+        }
+        
+        /* Integrated Carousel Styles */
+        
+        /* Carousel navigation dots */
+        .carousel-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: rgba(156, 163, 175, 0.5);
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .carousel-dot.active {
+            background-color: rgba(68, 255, 171, 0.8);
+            border-color: rgba(68, 255, 171, 0.6);
+            box-shadow: 0 0 12px rgba(68, 255, 171, 0.4);
+            transform: scale(1.2);
+        }
+        
+        .carousel-dot:hover {
+            background-color: rgba(68, 255, 171, 0.6);
+            border-color: rgba(68, 255, 171, 0.4);
+            transform: scale(1.1);
+        }
+        
+        /* Arrow and close button hover effects */
+        #prev-arrow:hover, #next-arrow:hover, #close-carousel:hover {
+            transform: translateY(-50%) scale(1.1);
+            box-shadow: 0 0 20px rgba(68, 255, 171, 0.4);
+        }
+        
+        #close-carousel:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Project tiles in full-page carousel - responsive sizing controlled by JS */
+        #projects-container .project-tile {
+            flex-shrink: 0;
+            height: auto;
+            transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1), 
+                        opacity 0.6s ease, 
+                        filter 0.6s ease;
+            transform: scale(0.8);
+            opacity: 0.6;
+            filter: blur(2px);
+        }
+        
+        /* Ensure highlighted projects also have smooth transitions */
+        #projects-container .project-tile.highlight-project-animation {
+            transition: transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1), 
+                        opacity 0.6s ease, 
+                        filter 0.6s ease,
+                        box-shadow 0.3s ease,
+                        border-color 0.3s ease !important;
+            /* Override any conflicting animation properties */
+            animation-fill-mode: forwards;
+        }
+        
+        /* Highlighted projects inherit responsive sizing from JavaScript - no additional CSS needed */
+        
+        /* Center project (active) - applies to both regular and highlighted projects */
+        #projects-container .project-tile.center,
+        #projects-container .project-tile.center.highlight-project-animation {
+            transform: scale(1);
+            opacity: 1;
+            filter: blur(0px);
+            z-index: 10;
+        }
+        
+        /* Side projects - applies to both regular and highlighted projects */
+        #projects-container .project-tile.side,
+        #projects-container .project-tile.side.highlight-project-animation {
+            transform: scale(0.7);
+            opacity: 0.4;
+            filter: blur(3px);
+        }
+        
+        /* Far side projects (pacman effect) - applies to both regular and highlighted projects */
+        #projects-container .project-tile.far,
+        #projects-container .project-tile.far.highlight-project-animation {
+            transform: scale(0.5);
+            opacity: 0.2;
+            filter: blur(5px);
+        }
+        
+        @media (max-width: 768px) {
+            #projects-container .project-tile.center,
+            #projects-container .project-tile.center.highlight-project-animation {
+                transform: scale(0.9);
+            }
+            
+            #projects-container .project-tile.side,
+            #projects-container .project-tile.side.highlight-project-animation {
+                transform: scale(0.6);
+            }
+            
+            #projects-container .project-tile.far,
+            #projects-container .project-tile.far.highlight-project-animation {
+                transform: scale(0.4);
+            }
+        }
+        
+        /* Projects section is now always visible */
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- The canvas for our animated starfield background -->
+    <canvas id="starfield"></canvas>
+
+    <div class="relative min-h-screen flex flex-col items-center justify-center p-4 text-center overflow-hidden">
+        <header class="w-full max-w-5xl mx-auto">
+            <div class="min-h-screen flex flex-col items-center justify-center">
+                <h2 class="font-display text-gray-400 tracking-widest text-lg md:text-xl">
+                    AI RESEARCHER
+                </h2>
+                <h1 class="font-display text-3xl md:text-8xl lg:text-9xl font-light my-4 text-gray-50 tracking-tighter">
+                    VITTORIO ROSSI
+                </h1>
+                <p class="max-w-2xl text-lg text-gray-300 mb-8">
+                        CS master's student, AI developer, and football player obsessed with performance on and off the field.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 items-center">
+                    <a href="#about" class="glow-border font-display border-2 rounded-full px-8 py-3 text-lg text-gray-50 hover:bg-green-400/10">
+                        Explore My Work
+                    </a>
+                    <a href="assets/pdf/cv.pdf" target="_blank" rel="noopener noreferrer" class="glow-border font-display border-2 rounded-full px-8 py-3 text-lg text-gray-50 hover:bg-green-400/10">
+                        Download CV
+                    </a>
+                </div>
+                <div class="mt-16 flex space-x-8">
+                    <a href="https://www.linkedin.com/in/vitrossi/" target="_blank" rel="noopener noreferrer" class="icon-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                    </a>
+                    <a href="https://github.com/VittorioRossi" target="_blank" rel="noopener noreferrer" class="icon-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                    </a>
+                    <a href="mailto:rossi.vittori@gmail.com" class="icon-link">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                    </a>
+                </div>
+            </div>
+        </header>
+    </div>
+
+    <main class="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
+        
+        <!-- About Section -->
+        <section id="about" class="mb-24 md:mb-32 scroll-mt-20">
+            <h2 class="section-title font-display text-4xl md:text-5xl font-bold text-gray-50">About me</h2>
+            <div class="grid md:grid-cols-3 gap-8 items-center">
+                <div class="md:col-span-2 text-gray-300 text-lg leading-relaxed space-y-4">
+                    <p>
+                        Tackling significant, complex problems is my only aspiration. I am passionate about using software and artificial intelligence not just as a tool, but as a foundation for building robust, intelligent systems that can generate a positive impact and help create a more efficient and abundant world.
+                    </p>
+                    <p>
+                        That is why, after a Bachelor in Economics and CS at bocconi, I pivoted to a MSc in Artificial Intelligence at the same institution. My work is heavily focused on Large Language Models and I am now in the process of developing a research on diffusion LLMs that I hope can become my first paper. Outside of my academic research, I actively build and lead; I am always working on some side projects as you will see in the next section.
+                    </p>
+                </div>
+                <div class="flex justify-center md:justify-end">
+                    <img src="assets/logo.png" alt="Vittorio Rossi" class="rounded-full w-48 h-48 md:w-64 md:h-64 object-cover border-4 border-gray-700">
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Projects Section - Full Width Carousel -->
+    <section id="projects" class="w-full mb-24 md:mb-32 scroll-mt-20">
+        <div class="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+            <h2 class="section-title font-display text-4xl md:text-5xl font-bold text-gray-50 text-center">Projects</h2>
+        </div>
+        
+        <div class="relative h-screen flex items-center w-full">
+            <!-- Navigation arrows -->
+            <button id="prev-arrow" class="absolute left-8 top-1/2 transform -translate-y-1/2 z-20 bg-gray-800/80 hover:bg-gray-700/80 text-green-400 rounded-full p-4 transition-all duration-300 backdrop-blur-sm border border-green-500/30 hover:border-green-500/60">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+            <button id="next-arrow" class="absolute right-8 top-1/2 transform -translate-y-1/2 z-20 bg-gray-800/80 hover:bg-gray-700/80 text-green-400 rounded-full p-4 transition-all duration-300 backdrop-blur-sm border border-green-500/30 hover:border-green-500/60">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+            </button>
+            
+            <!-- Carousel container -->
+            <div id="projects-carousel" class="flex items-center h-full w-full overflow-hidden">
+                <div id="projects-container" class="flex items-center transition-transform duration-500 ease-out">
+                    <!-- Projects will be dynamically inserted here -->
+                </div>
+            </div>
+            
+            <!-- Navigation dots -->
+            <div id="carousel-dots" class="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-3">
+                <!-- Dots will be dynamically generated -->
+            </div>
+        </div>
+    </section>
+
+    <footer class="text-center py-8 text-gray-500">
+        <p>&copy; 2025 Vittorio Rossi. All rights reserved.</p>
+    </footer>
+
+
+    <script>
+        // Accessibility & Performance Enhancements
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+        // Interactive Starfield Background with FPS cap & reduced motion handling
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        let stars = [];
+        // Fewer stars if reduced motion is requested
+        const numStars = prefersReducedMotion.matches ? 60 : 100;
+        const mouse = { x: undefined, y: undefined };
+
+        // Throttle mousemove (store last time)
+        let lastMouseMove = 0;
+        const mouseThrottleMs = 50; // 20 fps sampling
+        window.addEventListener('mousemove', (event) => {
+            const now = performance.now();
+            if (now - lastMouseMove < mouseThrottleMs) return;
+            lastMouseMove = now;
+            mouse.x = event.x;
+            mouse.y = event.y;
+        });
+
+        class Star {
+            constructor() {
+                this.reset(true);
+            }
+            reset(initial = false) {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.2;
+                this.speedY = (Math.random() - 0.5) * 0.2;
+                this.originalSize = this.size;
+                if (!initial && prefersReducedMotion.matches) {
+                    // Slightly smaller baseline for reduced motion upon recycle
+                    this.size = this.originalSize * 0.9;
+                    this.originalSize = this.size;
+                }
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+                    this.reset();
+                }
+                if (!prefersReducedMotion.matches && mouse.x !== undefined) {
+                    // Interactive effect: stars get bigger near mouse
+                    const dx = mouse.x - this.x;
+                    const dy = mouse.y - this.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 100) {
+                        this.size = this.originalSize + (100 - distance) / 20;
+                    } else {
+                        this.size = this.originalSize;
+                    }
+                } else {
+                    this.size = this.originalSize; // keep stable
+                }
+            }
+            draw() {
+                ctx.fillStyle = 'rgba(229, 231, 235, 0.8)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function init() {
+            stars = [];
+            for (let i = 0; i < numStars; i++) {
+                stars.push(new Star());
+            }
+        }
+
+        // Frame rate capping
+        const targetFps = prefersReducedMotion.matches ? 20 : 40; // lower for reduced motion
+        const frameInterval = 1000 / targetFps;
+        let lastFrameTime = 0;
+
+        function animate(now) {
+            if (!lastFrameTime) lastFrameTime = now;
+            const delta = now - lastFrameTime;
+            if (delta >= frameInterval) {
+                lastFrameTime = now - (delta % frameInterval);
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                for (let i = 0; i < stars.length; i++) {
+                    stars[i].update();
+                    stars[i].draw();
+                }
+            }
+            requestAnimationFrame(animate);
+        }
+
+        // React to changes in prefers-reduced-motion dynamically
+        prefersReducedMotion.addEventListener('change', () => {
+            init();
+        });
+
+        init();
+        requestAnimationFrame(animate);
+    </script>
+    <script src="assets/js/projects.js"></script>
+</body>
+</html>
