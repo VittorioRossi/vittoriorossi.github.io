@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Prototype · node becomes the name</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<script>const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t;</script>
+<style>
+  :root { --ink: #111; --muted: #4f4c46; --paper: #f5f3ee; --line: #d9d5cc; --accent: #2e7d4f; --rule: #1f5e3b; }
+  :root[data-theme="dark"] { --ink: #ebe8e1; --muted: #a8a399; --paper: #151614; --line: #34332f; --accent: #7cc79a; --rule: #2e7d4f; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --ink: #ebe8e1; --muted: #a8a399; --paper: #151614; --line: #34332f; --accent: #7cc79a; --rule: #2e7d4f; }
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--paper); color-scheme: light dark; }
+  body { margin: 0; border-top: 4px solid var(--rule); color: var(--ink);
+    font-family: "Source Serif 4", Charter, Georgia, serif; font-size: 18px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+  main { max-width: 680px; margin: 0 auto; padding: 96px 20px 80px; position: relative; }
+  h1 { font-size: 2.4em; line-height: 1.1; font-weight: 600; letter-spacing: -.012em; margin: 0; opacity: 0; }
+  h1.show { opacity: 1; transition: opacity .5s ease; }
+  .role { font-variant: small-caps; letter-spacing: .06em; color: var(--accent); margin-top: 6px; opacity: 0; transform: translateY(6px);
+    transition: opacity .7s ease .1s, transform .7s ease .1s; }
+  .role.show { opacity: 1; transform: none; }
+  p.lede { opacity: .35; }
+  #fx, #bg { position: fixed; inset: 0; width: 100vw; height: 100vh; pointer-events: none; }
+  #bg { z-index: -1; } #fx { z-index: 5; }
+
+  .panel { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 20; display: flex; gap: 6px;
+    background: color-mix(in srgb, var(--paper) 90%, transparent); backdrop-filter: blur(8px);
+    border: 1px solid var(--line); border-radius: 999px; padding: 6px; font-size: .85em; }
+  .panel button { font: inherit; background: none; border: 0; color: var(--muted); padding: 4px 12px; border-radius: 999px; cursor: pointer;
+    font-variant: small-caps; letter-spacing: .05em; }
+  .panel button.on { background: var(--ink); color: var(--paper); }
+  .panel button:hover:not(.on) { color: var(--accent); }
+  .note { color: var(--muted); font-style: italic; font-size: .9em; margin-top: 40px; }
+  @media (max-width: 520px) { h1 { font-size: 2em; } main { padding-top: 64px; } }
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<canvas id="fx" aria-hidden="true"></canvas>
+<main>
+  <h1 id="name">Vittorio Rossi</h1>
+  <div class="role" id="role">AI engineer &amp; researcher · Milan</div>
+  <p class="lede">I build LLM systems that run in production and study how generative models spend their compute.</p>
+  <p class="note" id="desc"></p>
+</main>
+<div class="panel">
+  <button data-v="A" class="on">A · particles</button>
+  <button data-v="B">B · reveal</button>
+  <button id="replay">replay</button>
+  <button id="theme">theme</button>
+</div>
+<script>
+const root = document.documentElement;
+const css = n => getComputedStyle(root).getPropertyValue(n).trim();
+const GAP = 44;
+const ease = {
+  outBack: x => 1 + 2.2 * (x - 1) ** 3 + 1.2 * (x - 1) ** 2,
+  inOut: x => x < .5 ? 4 * x * x * x : 1 - (-2 * x + 2) ** 3 / 2,
+  out: x => 1 - (1 - x) ** 3,
+};
+const clamp = x => Math.max(0, Math.min(1, x));
+const gauss = () => Math.sqrt(-2 * Math.log(1 - Math.random())) * Math.cos(2 * Math.PI * Math.random());
+
+// Static lattice, same as the site, so the node visibly comes from it.
+const bg = document.getElementById("bg"), bctx = bg.getContext("2d");
+const fx = document.getElementById("fx"), ctx = fx.getContext("2d");
+let W, H, dpr;
+function size() {
+  dpr = Math.min(devicePixelRatio || 1, 2); W = innerWidth; H = innerHeight;
+  for (const c of [bg, fx]) { c.width = W * dpr; c.height = H * dpr; c.getContext("2d").setTransform(dpr, 0, 0, dpr, 0, 0); }
+  bctx.clearRect(0, 0, W, H); bctx.fillStyle = css("--accent");
+  const left = (W - 680) / 2, right = left + 680;
+  for (let y = GAP / 2; y < H; y += GAP) for (let x = GAP / 2; x < W; x += GAP) {
+    bctx.globalAlpha = x > left && x < right ? .09 : .24;
+    bctx.beginPath(); bctx.arc(x, y, 1.4, 0, 6.283); bctx.fill();
+  }
+}
+
+// Bounding box of the text itself, not the full-width h1 block.
+function textRect(el) { const g = document.createRange(); g.selectNodeContents(el); return g.getBoundingClientRect(); }
+
+// The lattice point the node grows from: the one nearest the name's centre, nudged right.
+function nodePoint(r) {
+  const x = Math.round((r.left + r.width * .62 - GAP / 2) / GAP) * GAP + GAP / 2;
+  const y = Math.round((r.top + r.height / 2 - GAP / 2) / GAP) * GAP + GAP / 2;
+  return { x, y };
+}
+
+// Sample the name's glyphs at the exact on-screen position and size.
+function sampleName(el, step) {
+  const r = el.getBoundingClientRect(), cs = getComputedStyle(el);
+  const off = document.createElement("canvas"), o = off.getContext("2d");
+  off.width = Math.ceil(r.width); off.height = Math.ceil(r.height);
+  o.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+  o.letterSpacing = cs.letterSpacing;
+  o.textBaseline = "middle"; o.fillStyle = "#000";
+  o.fillText(el.textContent, 0, r.height / 2);
+  const data = o.getImageData(0, 0, off.width, off.height).data, pts = [];
+  for (let y = 0; y < off.height; y += step) for (let x = 0; x < off.width; x += step)
+    if (data[(y * off.width + x) * 4 + 3] > 140) pts.push({ x: r.left + x, y: r.top + y });
+  return { pts, r };
+}
+
+let raf, variant = "A";
+const nameEl = document.getElementById("name"), roleEl = document.getElementById("role");
+const desc = {
+  A: "A · a lattice node swells, then releases particles that flow along smooth curves into the letters; the real text fades in underneath.",
+  B: "B · a lattice node swells into a disc, slides across the name and leaves it revealed behind it.",
+};
+
+function reset() {
+  cancelAnimationFrame(raf);
+  ctx.clearRect(0, 0, W, H);
+  nameEl.classList.remove("show"); roleEl.classList.remove("show");
+  nameEl.style.clipPath = ""; nameEl.style.opacity = "";
+  document.getElementById("desc").textContent = desc[variant];
+}
+
+function runA() {
+  const { pts } = sampleName(nameEl, W < 520 ? 3 : 2);
+  const n = nodePoint(textRect(nameEl)), color = css("--accent"), ink = css("--ink");
+  const parts = pts.map(p => {
+    const sx = n.x + gauss() * 3, sy = n.y + gauss() * 3;
+    const mx = (sx + p.x) / 2 + gauss() * 70, my = (sy + p.y) / 2 + gauss() * 50;
+    return { sx, sy, mx, my, tx: p.x, ty: p.y, delay: Math.random() * 450 };
+  });
+  const T0 = performance.now(), GROW = 900, FLY = 1300, SETTLE = 500;
+  function f(now) {
+    const t = now - T0;
+    ctx.clearRect(0, 0, W, H);
+    // node: swell, hold a beat, then empty out as particles leave
+    const g = clamp(t / GROW), leave = clamp((t - GROW) / 500);
+    const rad = 1.4 + 15 * ease.outBack(g) * (1 - ease.out(leave));
+    if (rad > .3) {
+      ctx.globalAlpha = .18 * (1 - leave); ctx.fillStyle = color;
+      ctx.beginPath(); ctx.arc(n.x, n.y, rad * 1.9, 0, 6.283); ctx.fill();
+      ctx.globalAlpha = .9 * (1 - leave * .6);
+      ctx.beginPath(); ctx.arc(n.x, n.y, rad, 0, 6.283); ctx.fill();
+    }
+    if (t > GROW) {
+      const fadeOut = clamp((t - GROW - FLY - 150) / SETTLE);
+      for (const p of parts) {
+        const k = ease.inOut(clamp((t - GROW - p.delay) / (FLY - 450)));
+        if (k <= 0) continue;
+        const a = 1 - k, x = a * a * p.sx + 2 * a * k * p.mx + k * k * p.tx, y = a * a * p.sy + 2 * a * k * p.my + k * k * p.ty;
+        ctx.globalAlpha = (1 - fadeOut) * .95;
+        ctx.fillStyle = k > .85 ? ink : color;
+        ctx.fillRect(x - .9, y - .9, 1.8, 1.8);
+      }
+      if (t > GROW + FLY - 100 && !nameEl.classList.contains("show")) { nameEl.classList.add("show"); roleEl.classList.add("show"); }
+      if (fadeOut >= 1) { ctx.clearRect(0, 0, W, H); return; }
+    }
+    raf = requestAnimationFrame(f);
+  }
+  raf = requestAnimationFrame(f);
+}
+
+function runB() {
+  const r = textRect(nameEl), n = nodePoint(r), color = css("--accent");
+  const startX = r.left - 30, endX = r.right + 40, cy = r.top + r.height / 2;
+  const T0 = performance.now(), GROW = 800, MOVE = 650, SWEEP = 1100, OUT = 450;
+  nameEl.style.opacity = 1;
+  nameEl.style.clipPath = `inset(0 100% 0 0)`;
+  function f(now) {
+    const t = now - T0;
+    ctx.clearRect(0, 0, W, H);
+    let x = n.x, y = n.y, rad = 1.4 + 16 * ease.outBack(clamp(t / GROW)), alpha = .9;
+    if (t > GROW) { // glide to the start of the name
+      const k = ease.inOut(clamp((t - GROW) / MOVE));
+      x = n.x + (startX - n.x) * k; y = n.y + (cy - n.y) * k; rad += r.height * .3 * k;
+    }
+    if (t > GROW + MOVE) { // sweep left to right, revealing the text behind it
+      const k = ease.inOut(clamp((t - GROW - MOVE) / SWEEP));
+      x = startX + (endX - startX) * k;
+      const shown = clamp((x - r.left) / r.width);
+      nameEl.style.clipPath = `inset(-10% ${(1 - shown) * 100}% -10% 0)`;
+      if (k > .3 && !roleEl.classList.contains("show")) roleEl.classList.add("show");
+    }
+    if (t > GROW + MOVE + SWEEP) { // shrink back into a lattice dot
+      const k = ease.out(clamp((t - GROW - MOVE - SWEEP) / OUT));
+      rad = rad * (1 - k) + 1.4 * k; alpha = .9 * (1 - k);
+      if (k >= 1) { ctx.clearRect(0, 0, W, H); nameEl.style.clipPath = ""; return; }
+    }
+    ctx.fillStyle = color;
+    ctx.globalAlpha = alpha * .2; ctx.beginPath(); ctx.arc(x, y, rad * 1.7, 0, 6.283); ctx.fill();
+    ctx.globalAlpha = alpha; ctx.beginPath(); ctx.arc(x, y, rad, 0, 6.283); ctx.fill();
+    raf = requestAnimationFrame(f);
+  }
+  raf = requestAnimationFrame(f);
+}
+
+function play() { reset(); (variant === "A" ? runA : runB)(); }
+document.querySelectorAll("[data-v]").forEach(b => b.onclick = () => {
+  variant = b.dataset.v;
+  document.querySelectorAll("[data-v]").forEach(x => x.classList.toggle("on", x === b));
+  play();
+});
+document.getElementById("replay").onclick = play;
+document.getElementById("theme").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark"; localStorage.setItem("theme", root.dataset.theme);
+  size(); play();
+};
+addEventListener("resize", () => { size(); play(); });
+document.fonts.load('600 43px "Source Serif 4"').then(() => document.fonts.ready).then(() => { size(); play(); });
+</script>
+<script src="/draft.js" defer></script>
+</body>
+</html>
