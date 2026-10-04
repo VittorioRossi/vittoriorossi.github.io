@@ -126,7 +126,7 @@ function sampleName(el, step) {
 }
 
 // Timel// Timeline. The node is a dot whose own path passes left of the name; we predict which.
-const SEARCH = [800, 3200], LEAD = 1200, GROW = 650, FLY = 1300, SETTLE = 500, BACK = 900;
+const SEARCH = [500, 1600], LEAD = 1200, GROW = 650, FLY = 1300, SETTLE = 500, BACK = 900;
 let show = null;
 
 function start(now) {
@@ -144,7 +144,7 @@ function start(now) {
     }
   }
   const p = pos(best.dot, clock(best.arrive));
-  show = { ...best, target, err: { x: target.x - p.x, y: target.y - p.y }, pts: sampleName(nameEl, W < 520 ? 3 : 2), parts: null };
+  show = { ...best, lead: Math.min(LEAD, best.arrive - now), target, err: { x: target.x - p.x, y: target.y - p.y }, pts: sampleName(nameEl, W < 520 ? 3 : 2), parts: null };
 }
 
 function frame(now) {
@@ -153,16 +153,16 @@ function frame(now) {
   const t = clock(now);
   drawLattice(t);
   ctx.clearRect(0, 0, W, H);
-  if (show && now >= show.arrive - LEAD) {
+  if (show && now >= show.arrive - show.lead) {
     const d = show.dot, a = show.target, e = now - show.arrive;
     // Approach: the dot keeps its own path and speed; a small correction fades in so it lands exactly.
     let nx = a.x, ny = a.y;
     if (e < 0) {
-      const p = pos(d, t), c = smoother(clamp(1 + e / LEAD));
+      const p = pos(d, t), c = smoother(clamp(1 + e / show.lead));
       nx = p.x + show.err.x * c; ny = p.y + show.err.y * c;
     }
     d.hide = e < GROW + FLY + SETTLE ? 1 : 1 - clamp((e - GROW - FLY - SETTLE) / BACK);
-    const lit = smoother(clamp(1 + e / LEAD)), base = dim(d);
+    const lit = smoother(clamp(1 + e / show.lead)), base = dim(d);
     const g = clamp(e / GROW), leave = clamp((e - GROW) / 450);
     const rad = 1.4 + 1.6 * lit + 12 * outBack(g) * (1 - out(leave));
     const alpha = (base + (.9 - base) * lit) * (1 - leave * .7);
