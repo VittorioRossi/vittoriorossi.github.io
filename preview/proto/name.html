@@ -126,7 +126,7 @@ function sampleName(el, step) {
 }
 
 // Timel// Timeline. The node is a dot whose own path passes left of the name; we predict which.
-const SEARCH = [500, 1600], LEAD = 1200, GROW = 650, FLY = 1300, SETTLE = 500, BACK = 900;
+const SEARCH = [500, 1600], LEAD = 1200, DECEL = 600, GROW = 650, FLY = 1300, SETTLE = 500, BACK = 900;
 let show = null;
 
 function start(now) {
@@ -154,17 +154,17 @@ function frame(now) {
   drawLattice(t);
   ctx.clearRect(0, 0, W, H);
   if (show && now >= show.arrive - show.lead) {
-    const d = show.dot, a = show.target, e = now - show.arrive;
-    // Approach: the dot keeps its own path and speed; a small correction fades in so it lands exactly.
-    let nx = a.x, ny = a.y;
-    if (e < 0) {
-      const p = pos(d, t), c = smoother(clamp(1 + e / show.lead));
-      nx = p.x + show.err.x * c; ny = p.y + show.err.y * c;
-    }
-    d.hide = e < GROW + FLY + SETTLE ? 1 : 1 - clamp((e - GROW - FLY - SETTLE) / BACK);
+    const d = show.dot, a = show.target, e = now - show.arrive, D = Math.min(DECEL, 2 * show.lead);
+    // Path time: 1:1 with the clock, then decelerates linearly to rest exactly at the target.
+    const u = e + D / 2, tau = u <= 0 ? e : u < D ? -D / 2 + u - u * u / (2 * D) : 0;
+    const p = pos(d, clock(show.arrive) + tau), c = smoother(clamp(1 + tau / show.lead));
+    const nx = p.x + show.err.x * c, ny = p.y + show.err.y * c;
+    // Swell begins while the dot is still slowing; the burst begins while it is still swelling.
+    const pe = e + D / 4 - GROW * .55;
+    d.hide = pe < FLY + SETTLE ? 1 : 1 - clamp((pe - FLY - SETTLE) / BACK);
     const lit = smoother(clamp(1 + e / show.lead)), base = dim(d);
-    const g = clamp(e / GROW), leave = clamp((e - GROW) / 450);
-    const rad = 1.4 + 1.6 * lit + 12 * outBack(g) * (1 - out(leave));
+    const g = smoother(clamp((e + D / 4) / GROW)), leave = smoother(clamp(pe / 700));
+    const rad = (1.4 + 1.6 * lit + 12 * g) * (1 - leave);
     const alpha = (base + (.9 - base) * lit) * (1 - leave * .7);
     if (leave < 1) {
       ctx.fillStyle = accent;
@@ -172,7 +172,6 @@ function frame(now) {
       ctx.globalAlpha = alpha; ctx.beginPath(); ctx.arc(nx, ny, rad, 0, 6.283); ctx.fill();
     }
     // Burst: particles flow from the node into the letters.
-    const pe = e - GROW;
     if (pe > 0) {
       show.parts ??= show.pts.map(p => {
         const sx = a.x + gauss() * 3, sy = a.y + gauss() * 3;
@@ -188,7 +187,7 @@ function frame(now) {
       }
       if (pe > FLY - 100) { nameEl.classList.add("show"); roleEl.classList.add("show"); }
     }
-    if (e > GROW + FLY + SETTLE + BACK) { d.hide = 0; show = null; }
+    if (pe > FLY + SETTLE + BACK) { d.hide = 0; show = null; }
   }
   requestAnimationFrame(frame);
 }
