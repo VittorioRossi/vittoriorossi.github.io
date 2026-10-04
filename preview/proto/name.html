@@ -130,15 +130,11 @@ function start(now) {
   for (const d of dots) d.hide = 0;
   const tr = textRect(nameEl);
   const anchor = { x: tr.left + tr.width * .62, y: tr.top + tr.height / 2 };
-  // Pull a dot from the margin when there is one, so it travels visibly; else the nearest dot.
-  const l = (W - COL) / 2, t = clock(now + WAIT);
-  const from = W > COL + 2 * GAP ? { x: l + COL + GAP * 1.5, y: anchor.y } : anchor;
-  let best, bd = Infinity;
-  for (const d of dots) {
-    if (W > COL + 2 * GAP && d.x < l + COL) continue;
-    const p = pos(d, t), dd = (p.x - from.x) ** 2 + (p.y - from.y) ** 2;
-    if (dd < bd) { bd = dd; best = d; }
-  }
+  // Pull a random dot from the left margin; on narrow screens, any dot above the fold.
+  const l = (W - COL) / 2;
+  let pool = dots.filter(d => d.x < l - GAP / 2 && d.y < H * .8);
+  if (!pool.length) pool = dots.filter(d => d.y < H * .6);
+  const best = pool[Math.floor(Math.random() * pool.length)];
   const pts = sampleName(nameEl, W < 520 ? 3 : 2);
   show = { t0: now + WAIT, dot: best, anchor, pts, parts: null, bend: gauss() * 60 };
 }
