@@ -1,32 +1,30 @@
-# vittoriorossi.github.io
+# vittoriorossi.com
 
-Static personal site served locally with Vite for fast dev reloads.
+Personal site: one static page, `index.html` (inline CSS and JS, no framework).
+Design follows the "paper" system kept on the RPi (`~/design/DESIGN.md`).
 
-## Dev
+## Layout
 
-Install dependencies and start dev server:
+- `index.html` — the site
+- `prototypes/` — animation prototypes, not deployed
+- `backup/2025-site/` — the previous Tailwind site (also tagged `old-site-2025`), not deployed
+
+## Deploy
+
+Vercel builds every push to `main` with `vite build` and serves `dist/` at vittoriorossi.com.
 
 ```bash
 npm install
-npm run dev
+npm run build    # sanity check: dist/index.html
+git push origin main
 ```
 
-Open the printed localhost URL (default http://localhost:5173).
+## Draft on the RPi first
 
-## Build
+Iterate on the tailnet preview with draft mode (tap-to-comment), then push:
 
 ```bash
-npm run build
+sed 's|<script defer src="/_vercel/insights/script.js"></script>|<script src="/draft.js" defer></script>|' index.html > /tmp/site.html
+scp /tmp/site.html rpi:/var/www/hub/site/index.html
+# http://rpi.vittoriorossi.com/site/
 ```
-
-Output goes to `dist/` which you can deploy as static assets (GitHub Pages can still serve `index.html` at root – you can also just keep using the raw `index.html` on `main` without building if you don't add a bundling pipeline).
-
-## Preview Production Build
-
-```bash
-npm run preview
-```
-
-## Notes
-- Vite is only here to give you an `npm run dev` command with live reload.
-- You can later add JS/TS modules under a `src/` directory; just import them in `index.html`.

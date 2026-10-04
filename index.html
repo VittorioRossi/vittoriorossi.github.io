@@ -1,608 +1,402 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vittorio Rossi | Researcher</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <style>
-        html {
-            scroll-behavior: smooth;
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0a0a0a;
-            color: #e5e7eb; /* A slightly off-white for better readability */
-        }
-        .font-display {
-            font-family: 'Raleway', sans-serif;
-        }
-        #starfield {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            /* The blurred green orbs from your example, recreated with gradients */
-            background-image: 
-                radial-gradient(circle at 15% 25%, rgba(68, 255, 171, 0.08), transparent 40%),
-                radial-gradient(circle at 85% 75%, rgba(68, 255, 171, 0.06), transparent 40%);
-        }
-        /* Custom styles for glowing effects and borders */
-        .glow-border {
-            border-color: rgba(68, 255, 171, 0.6);
-            box-shadow: 0 0 5px rgba(68, 255, 171, 0.3), 0 0 10px rgba(68, 255, 171, 0.2);
-            transition: all 0.3s ease;
-        }
-        .glow-border:hover {
-            border-color: rgba(68, 255, 171, 1);
-            box-shadow: 0 0 15px rgba(68, 255, 171, 0.5), 0 0 25px rgba(68, 255, 171, 0.3);
-            transform: translateY(-2px);
-        }
-        .nav-link {
-            position: relative;
-            color: #9ca3af;
-            transition: color 0.3s ease;
-        }
-        .nav-link:hover {
-            color: #44ffab;
-        }
-        .nav-link::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            transform: scaleX(0);
-            height: 1px;
-            bottom: -4px;
-            left: 0;
-            background-color: #44ffab;
-            transform-origin: bottom right;
-            transition: transform 0.3s ease-out;
-        }
-        .nav-link:hover::after {
-            transform: scaleX(1);
-            transform-origin: bottom left;
-        }
-        .section-title {
-            position: relative;
-            display: inline-block;
-            padding-bottom: 0.5rem;
-            margin-bottom: 2rem;
-        }
-        .section-title::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 40%;
-            height: 2px;
-            background: linear-gradient(90deg, rgba(68, 255, 171, 0.8) 0%, rgba(68, 255, 171, 0) 100%);
-        }
-        /* Glassmorphism effect for cards */
-        .glass-card {
-            background: rgba(24, 24, 27, 0.5);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 1rem;
-        }
-        .project-tile {
-            opacity: 0;
-            transform: translateY(30px);
-            /* Only transition opacity and initial translateY, not hover transforms */
-        }
-        
-        .project-tile:not(.is-visible) {
-            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-        }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Vittorio Rossi</title>
+<meta name="description" content="AI engineer and researcher in Milan. Founding AI engineer at Commerce Clarity; diffusion language models; builds IRE on the side.">
+<meta name="theme-color" content="#f5f3ee" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#151614" media="(prefers-color-scheme: dark)">
+<script>const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t;
+if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("anim");</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+  :root { --ink: #111; --muted: #4f4c46; --paper: #f5f3ee; --line: #d9d5cc; --head: #1f5e3b; --accent: #2e7d4f; --rule: #1f5e3b; --strong: #1f5e3b; --uline: #9cc8ab; }
+  :root[data-theme="dark"] { --ink: #ebe8e1; --muted: #a8a399; --paper: #151614; --line: #34332f; --head: #e9e6df; --accent: #7cc79a; --rule: #2e7d4f; --strong: #a8e0bd; --uline: #3f6b4f; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --ink: #ebe8e1; --muted: #a8a399; --paper: #151614; --line: #34332f; --head: #e9e6df; --accent: #7cc79a; --rule: #2e7d4f; --strong: #a8e0bd; --uline: #3f6b4f; }
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--paper); color-scheme: light dark; }
+  body { margin: 0; border-top: 4px solid var(--rule); background: transparent; color: var(--ink);
+    font-family: "Source Serif 4", Charter, Georgia, serif; font-size: 18px; line-height: 1.65;
+    -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: underline; text-decoration-color: var(--uline);
+    text-decoration-thickness: 1.5px; text-underline-offset: .2em; }
+  b, strong { color: var(--strong); font-weight: 600; }
+  #bg { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: -1; pointer-events: none; }
+  a:hover { color: var(--accent); text-decoration-color: var(--accent); }
 
-        .project-tile.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-            /* Remove the conflicting transition once visible */
-            transition: none;
-        }
-        .icon-link {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 56px; /* Increased size */
-            height: 56px; /* Increased size */
-            border-radius: 50%;
-            border: 1px solid rgba(68, 255, 171, 0.4); /* More subtle border */
-            color: rgba(229, 231, 235, 0.7); /* Softer icon color */
-            transition: all 0.3s ease;
-            /* A more "lucid" glow */
-            box-shadow: 0 0 12px rgba(68, 255, 171, 0.15);
-        }
-        .icon-link:hover {
-            color: #ffffff;
-            background-color: rgba(68, 255, 171, 0.1);
-            border-color: rgba(68, 255, 171, 0.8);
-            box-shadow: 0 0 20px rgba(68, 255, 171, 0.4);
-            transform: translateY(-3px) scale(1.05); /* Enhanced hover effect */
-        }
-        
-        /* Primary button animation */
-        @keyframes gentle-pulse {
-            0%, 100% {
-                transform: translateY(0px);
-                box-shadow: 0 0 5px rgba(68, 255, 171, 0.3), 0 0 10px rgba(68, 255, 171, 0.2);
-            }
-            50% {
-                transform: translateY(-1px);
-                box-shadow: 0 0 8px rgba(68, 255, 171, 0.4), 0 0 15px rgba(68, 255, 171, 0.3);
-            }
-        }
-        
-        .primary-btn-animation {
-            animation: gentle-pulse 2.5s ease-in-out infinite;
-            box-shadow: 0 0 5px rgba(68, 255, 171, 0.3), 0 0 10px rgba(68, 255, 171, 0.2);
-        }
-        
-        .primary-btn-animation:hover {
-            animation-play-state: paused;
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 0 12px rgba(68, 255, 171, 0.5), 0 0 20px rgba(68, 255, 171, 0.4);
-        }
-        
-        /* Highlight project animation - only affects glow, not transform */
-        @keyframes highlight-pulse {
-            0%, 100% {
-                box-shadow: 0 0 10px rgba(68, 255, 171, 0.4), 0 0 20px rgba(68, 255, 171, 0.3), 0 0 30px rgba(68, 255, 171, 0.2);
-                border-color: rgba(68, 255, 171, 0.6);
-            }
-            50% {
-                box-shadow: 0 0 15px rgba(68, 255, 171, 0.5), 0 0 25px rgba(68, 255, 171, 0.4), 0 0 35px rgba(68, 255, 171, 0.3);
-                border-color: rgba(68, 255, 171, 0.8);
-            }
-        }
-        
-        .highlight-project-animation {
-            animation: highlight-pulse 2s ease-in-out infinite;
-            border: 2px solid rgba(68, 255, 171, 0.6);
-            box-shadow: 0 0 10px rgba(68, 255, 171, 0.4), 0 0 20px rgba(68, 255, 171, 0.3);
-            /* Animation only affects box-shadow and border-color, not transform */
-        }
-        
-        .highlight-project-animation:hover {
-            animation-play-state: paused;
-        }
-        
-        /* Grid Layout Styles */
-        
-        /* Projects grid container - Responsive grid with CSS-only sizing */
-        .grid-container {
-            display: grid;
-            justify-items: center;
-            align-items: start;
-            width: 100%;
-            box-sizing: border-box;
-            /* Responsive grid columns and gaps */
-            grid-template-columns: repeat(2, minmax(280px, 1fr));
-            gap: 2rem; /* Reduced from large spacing (120px/100px/80px) to 2rem (32px) */
-        }
-        
-        /* Project tiles responsive sizing */
-        .project-tile {
-            width: 100%;
-            max-width: 650px; /* Large screens max width */
-            min-width: 280px; /* Minimum viable width */
-        }
-        
-        /* Responsive breakpoints */
-        @media (min-width: 1200px) {
-            .grid-container {
-                gap: 3rem; /* 48px gap for large screens */
-            }
-            .project-tile {
-                max-width: 650px;
-            }
-        }
-        
-        @media (min-width: 768px) and (max-width: 1199px) {
-            .grid-container {
-                gap: 2.5rem; /* 40px gap for medium screens */
-                grid-template-columns: repeat(2, minmax(250px, 1fr));
-            }
-            .project-tile {
-                max-width: 580px;
-            }
-        }
-        
-        @media (max-width: 767px) {
-            .grid-container {
-                grid-template-columns: 1fr; /* Single column on mobile */
-                gap: 2rem; /* 32px gap for mobile */
-            }
-            .project-tile {
-                max-width: 500px;
-                width: 100%;
-            }
-        }
-        
-        /* Project tiles in grid - clean grid styling */
-        #projects-container .project-tile {
-            /* Fallback dimensions in case JavaScript doesn't set them */
-            width: 100%;
-            max-width: 100%; /* Don't exceed grid cell */
-            height: auto;
-            box-sizing: border-box;
-            margin: 0;
-            position: relative;
-        }
-        
-        /* Apply hover transitions only after scroll animation completes */
-        #projects-container .project-tile.is-visible {
-            transition: transform 0.2s ease-out,
-                        box-shadow 0.2s ease-out,
-                        border-color 0.2s ease-out !important;
-        }
-        
-        /* Enhanced hover effects for all grid tiles - ensure consistent timing */
-        #projects-container .project-tile {
-            transition: transform 0.2s ease-out,
-                        box-shadow 0.2s ease-out,
-                        border-color 0.2s ease-out;
-        }
-        
-        #projects-container .project-tile:hover {
-            transform: translateY(-8px) scale(1.02);
-            transition: transform 0.2s ease-out,
-                        box-shadow 0.2s ease-out,
-                        border-color 0.2s ease-out;
-        }
-        
-        /* Highlighted projects maintain their special animations and hover */
-        #projects-container .project-tile.highlight-project-animation {
-            transition: transform 0.2s ease-out,
-                        box-shadow 0.2s ease-out,
-                        border-color 0.2s ease-out;
-            /* Keep the highlight pulse animation */
-        }
-        
-        #projects-container .project-tile.highlight-project-animation:hover {
-            animation-play-state: paused;
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 0 20px rgba(68, 255, 171, 0.6), 0 0 30px rgba(68, 255, 171, 0.5), 0 0 40px rgba(68, 255, 171, 0.4);
-            border-color: rgba(68, 255, 171, 1);
-            transition: transform 0.2s ease-out,
-                        box-shadow 0.2s ease-out,
-                        border-color 0.2s ease-out;
-        }
-        
+  nav { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+  nav .in { max-width: 980px; margin: 0 auto; padding: 10px 20px; display: flex; align-items: center; gap: 18px; }
+  nav a { text-decoration: none; font-variant: small-caps; letter-spacing: .06em; font-size: .9em; color: var(--muted); }
+  nav a:hover { color: var(--accent); }
+  nav .home { color: var(--ink); font-weight: 600; margin-right: auto; font-variant: normal; letter-spacing: 0; }
+  nav .in { position: relative; }
+  nav a.on { color: var(--accent); }
+  #mark { position: absolute; bottom: -1px; left: 0; height: 2px; width: 0; background: var(--accent); opacity: 0;
+    transition: transform .35s cubic-bezier(.2,.7,.2,1), width .35s cubic-bezier(.2,.7,.2,1), opacity .25s; }
+  #theme { background: none; border: 0; color: var(--muted); padding: 4px; margin: -4px 0; cursor: pointer;
+    display: grid; place-items: center; border-radius: 999px; }
+  #theme:hover { color: var(--accent); }
+  #theme svg { width: 19px; height: 19px; display: block; }
+  #theme .sun { display: none; }
+  .dark-on #theme .sun { display: block; } .dark-on #theme .moon { display: none; }
 
-        
-        /* Projects section is now always visible */
-        
-        /* Enhanced mobile margins and spacing */
-        @media (max-width: 640px) {
-            /* Increase hero section padding on mobile */
-            .relative.min-h-screen.flex.flex-col {
-                padding: 2rem !important; /* 32px instead of 16px */
-            }
-            
-            /* Increase spacing between hero elements on mobile */
-            .text-center.mb-12 {
-                margin-bottom: 2rem !important; /* Tighter on mobile */
-            }
-            
-            .flex.flex-col.sm\\:flex-row.gap-4.items-center.mb-16 {
-                margin-bottom: 2.5rem !important; /* Adjust CTA spacing */
-            }
-            
-            /* Increase main container padding on mobile */
-            main {
-                padding-left: 3rem !important; /* 48px - much more generous */
-                padding-right: 3rem !important;
-                padding-top: 3rem !important; /* 48px instead of default */
-                padding-bottom: 3rem !important;
-            }
-            
-            /* Increase section margins on mobile */
-            #about, #projects {
-                margin-bottom: 3rem !important; /* 48px instead of default */
-            }
-            
-            /* Increase title margins on mobile */
-            .section-title {
-                margin-bottom: 2rem !important; /* 32px instead of 32px, keep same but ensure consistency */
-            }
-            
-            /* Ensure project section title has proper responsive sizing */
-            #projects .section-title {
-                font-size: 2.5rem !important; /* Ensure it's readable on mobile */
-                line-height: 1.2 !important;
-                margin-bottom: 2rem !important;
-            }
-            
-            /* Increase spacing in about text on mobile */
-            #about div {
-                margin-top: 2rem !important;
-            }
-            
-            /* Ensure project tiles have proper margins on mobile */
-            .project-tile {
-                margin-bottom: 2rem !important;
-            }
-            
-            /* Fix project tile titles on mobile */
-            .project-tile h3 {
-                font-size: 1.5rem !important; /* Ensure project titles are readable */
-                line-height: 1.3 !important;
-                margin-bottom: 1rem !important;
-            }
-            
-            .project-tile p {
-                font-size: 0.95rem !important; /* Slightly smaller but still readable */
-                line-height: 1.5 !important;
-            }
-            
-            /* Increase grid gap on mobile */
-            .grid-container {
-                gap: 2.5rem !important; /* More space between project tiles */
-            }
-        }
-        
-        @media (min-width: 641px) and (max-width: 768px) {
-            /* Tablet margins - slightly less than mobile but more than desktop */
-            .relative.min-h-screen.flex.flex-col {
-                padding: 2.5rem !important; /* 40px */
-            }
-            
-            main {
-                padding-left: 3.5rem !important; /* 56px - more generous for tablets */
-                padding-right: 3.5rem !important;
-                padding-top: 4rem !important; /* 64px */
-                padding-bottom: 4rem !important;
-            }
-            
-            #about, #projects {
-                margin-bottom: 4rem !important; /* 64px */
-            }
-            
-            .grid-container {
-                gap: 2.75rem !important; /* Moderate gap for tablets */
-            }
-        }
-        
-        /* Additional mobile typography improvements */
-        @media (max-width: 640px) {
-            /* Ensure proper spacing for title elements */
-            h1, h2 {
-                margin-bottom: 1.5rem !important;
-            }
-            
-            /* Add more space around paragraphs */
-            p {
-                margin-bottom: 1.25rem !important;
-            }
-            
-            /* Ensure buttons have proper spacing */
-            .glow-border {
-                margin: 0.5rem !important;
-            }
-        }
-    </style>
+  html.fade, html.fade * { transition: background-color .35s ease, color .35s ease, border-color .35s ease,
+    text-decoration-color .35s ease, fill .35s ease !important; }
+  html.anim section { opacity: 0; transform: translateY(10px); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.7,.2,1); }
+  html.anim section.seen { opacity: 1; transform: none; }
+  html.anim h1:not(.show) { opacity: 0; }
+  html.anim h1.show { opacity: 1; transition: opacity .5s ease; }
+  html.anim .role { opacity: 0; transform: translateY(6px); transition: opacity .7s ease .1s, transform .7s ease .1s; }
+  html.anim .role.show { opacity: 1; transform: none; }
+  #fx { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 5; pointer-events: none; }
+  @media print { html.anim section, html.anim h1, html.anim .role { opacity: 1; transform: none; } #bg, #fx, nav { display: none; } }
+
+  main { max-width: 980px; margin: 0 auto; padding: 48px 20px 80px; }
+  h1 { font-size: 2.4em; line-height: 1.1; font-weight: 600; letter-spacing: -.012em; margin: 0; }
+  .role { font-variant: small-caps; letter-spacing: .06em; color: var(--accent); margin-top: 6px; }
+
+  section { margin-top: 56px; padding-top: 28px; border-top: 1px solid var(--line); scroll-margin-top: 56px; }
+  h2 { font-size: 1.5em; line-height: 1.2; font-weight: 600; letter-spacing: -.01em; color: var(--head); margin: 0 0 20px; }
+
+  .cv { list-style: none; padding: 0; margin: 0; }
+  .cv li { display: grid; grid-template-columns: 128px 1fr; gap: 12px; padding: 3px 0; }
+  .yr { font-variant: small-caps; font-variant-numeric: tabular-nums; letter-spacing: .04em; color: var(--accent); }
+
+  .item { margin: 0 0 30px; }
+  .item:last-child { margin-bottom: 0; }
+  .meta { font-variant: small-caps; letter-spacing: .06em; font-size: .85em; color: var(--accent); }
+  .title { font-weight: 600; font-size: 1.08em; line-height: 1.35; }
+  .authors { color: var(--muted); font-size: .95em; }
+  .authors b { color: var(--strong); font-weight: 600; }
+  .item p { margin: 4px 0 0; }
+  .links { margin-top: 4px; font-variant: small-caps; letter-spacing: .06em; font-size: .85em; }
+  .links a { margin-right: 14px; }
+
+  .contact a { margin-right: 18px; }
+  .dm-dots { color: var(--muted) !important; }
+  footer { margin-top: 64px; color: var(--muted); font-size: .85em; font-style: italic; }
+  @media (max-width: 1060px) { nav .in { padding-right: 52px; } }
+  @media (max-width: 520px) {
+    body { font-size: 17px; }
+    main { padding-top: 32px; }
+    h1 { font-size: 2em; }
+    nav .in { gap: 12px; }
+    nav .opt { display: none; }
+    nav .home { display: none; }
+    nav a { white-space: nowrap; }
+    .cv li { grid-template-columns: 1fr; gap: 0; padding: 6px 0; }
+  }
+</style>
 </head>
-<body class="antialiased">
+<body>
+<nav><div class="in">
+  <a class="home" href="#top">Vittorio Rossi</a>
+  <a class="opt" href="#cv">timeline</a>
+  <a href="#research">research</a>
+  <a href="#building">building</a>
+  <a href="#contact">contact</a>
+  <button id="theme" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
+    <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+    <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg>
+  </button>
+  <span id="mark"></span>
+</div></nav>
+<main id="top">
 
-    <!-- The canvas for our animated starfield background -->
-    <canvas id="starfield"></canvas>
+<h1 id="name">Vittorio Rossi</h1>
+<div class="role" id="role">AI engineer &amp; researcher · Milan</div>
 
-    <div class="relative min-h-screen flex flex-col items-center justify-center p-4 text-center overflow-hidden">
-        <header class="w-full max-w-5xl mx-auto">
-            <div class="min-h-screen flex flex-col items-center justify-center">
-                <!-- Text Block: Tight grouping of title + name + subtitle -->
-                <div class="text-center mb-12">
-                    <h2 class="font-display text-gray-400 tracking-widest text-xl md:text-2xl">
-                        AI ENGINEER & ASPIRING RESEARCHER
-                    </h2>
-                    <h1 class="font-display text-3xl md:text-8xl lg:text-9xl font-light my-4 text-gray-50 tracking-tighter">
-                        VITTORIO ROSSI
-                    </h1>
-                    <p class="max-w-prose text-xl text-gray-300">
-                            CS master's student, AI developer, and football player obsessed with performance on and off the field.
-                    </p>
-                </div>
-                
-                <!-- CTA Block: Clear separation from text -->
-                <div class="flex flex-col sm:flex-row gap-4 items-center mb-16">
-                    <a href="#projects" class="glow-border font-display border-2 rounded-full px-8 py-3 text-lg text-gray-50 hover:bg-green-400/10">
-                        Explore My Work
-                    </a>
-                    <a href="pdf/cv.pdf" target="_blank" rel="noopener noreferrer" class="glow-border font-display border-2 rounded-full px-8 py-3 text-lg text-gray-50 hover:bg-green-400/10">
-                        Download CV
-                    </a>
-                </div>
-                
-                <!-- Socials Block: Separate group at bottom -->
-                <div class="flex space-x-8">
-                    <a href="https://www.linkedin.com/in/vitrossi/" target="_blank" rel="noopener noreferrer" class="icon-link">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
-                    </a>
-                    <a href="https://github.com/VittorioRossi" target="_blank" rel="noopener noreferrer" class="icon-link">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-                    </a>
-                    <a href="mailto:rossi.vittori@gmail.com" class="icon-link">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-8 h-8"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                    </a>
-                </div>
-            </div>
-        </header>
-    </div>
+<p>I build LLM systems that run in production and study how generative models spend their compute.
+I am the founding AI engineer at <a href="https://commerceclarity.ai">Commerce Clarity</a>, where I am building
+the agent development loop end to end: from the infrastructure that now serves <b>dozens of enterprise clients</b>
+to the agents themselves and the evaluation loops that improve them.</p>
+<p>My research is on <b>diffusion language models</b>: how they generate many tokens in parallel, and how to make that cheaper.
+I tackled their <b>length problem</b>: they must fix the answer's length before decoding, and I showed they already know it
+after one forward pass, which cuts compute by over 30% with no training.
+On the side I build <a href="https://ire-research.com">IRE</a>, an open-source environment for doing research with AI agents.</p>
+<p>I finish my MSc in Artificial Intelligence at Bocconi in December 2026.</p>
 
-    <main class="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
-        
-        <!-- About Section -->
-        <section id="about" class="mb-24 md:mb-32 scroll-mt-20">
-            <h2 class="section-title font-display text-5xl md:text-6xl font-bold text-gray-50 mb-12">About me</h2>
-            
-            <!-- Hero Statement - Make it stand out -->
-            <div class="mb-16">
-                <p class="text-2xl md:text-3xl font-bold text-green-400 leading-tight tracking-wide">
-                    I'm a researcher and builder obsessed with tackling <span class="text-green-300">"moonshot"</span> projects.
-                </p>
-            </div>
-            
-            <!-- Main Content with better spacing and hierarchy -->
-            <div class="text-gray-300 text-lg md:text-xl space-y-8 max-w-4xl leading-relaxed">
-                <p class="text-xl md:text-2xl text-white">
-                    I'm passionate about using software and artificial intelligence not just as tools, but as the foundation for a more efficient and abundant world.
-                </p>
-                
-                <p class="text-white">
-                    This is why, after a Bachelor's in Economics and CS at Bocconi, I pivoted to a dedicated MSc in Artificial Intelligence. My work is heavily focused on Large Language Models, but I'm a strong believer that the key isn't just to build bigger models, but to build smarter, more efficient ones.
-                </p>
-                
-                <div class="border-l-4 border-green-400 pl-6 my-8">
-                    <p class="text-lg md:text-xl italic text-white">
-                        As part of that obsession, I'm always working on side projects that test these "moonshot" ideas—like my open-source project that acts as a memory bridge between LLMs and codebases.
-                    </p>
-                </div>
-                
-                <p class="text-xl md:text-2xl font-medium text-white">
-                    I believe we are on the verge of <strong class="text-green-400">another paradigm shift as big as the attention mechanism</strong>. I think it will come from breakthroughs in <strong class="text-green-400">model efficiency and memory</strong>.
-                </p>
-            </div>
-        </section>
+<section id="cv">
+<h2>Timeline</h2>
+<ul class="cv">
+  <li><span class="yr">2024 – now</span><span>Founding AI Engineer, Commerce Clarity</span></li>
+  <li><span class="yr">2024 – 2026</span><span>MSc Artificial Intelligence, Bocconi</span></li>
+  <li><span class="yr">2024</span><span>Exchange, Georgia Tech · Jan – May</span></li>
+  <li><span class="yr">2023</span><span>Data Scientist Intern, Q8 Kuwait Petroleum Italy</span></li>
+  <li><span class="yr">2021 – 2024</span><span>BSc Economics, Management and Computer Science, Bocconi</span></li>
+</ul>
+</section>
 
-        <!-- Projects Section -->
-        <section id="projects" class="mb-24 md:mb-32 scroll-mt-20">
-            <h2 class="section-title font-display text-5xl md:text-6xl font-bold text-gray-50 mb-8">Projects</h2>
-            
-            <!-- Projects Grid Container -->
-            <div id="projects-container" class="grid-container">
-                <!-- Projects will be dynamically inserted here -->
-            </div>
-        </section>
+<section id="news">
+<h2>News</h2>
+<ul class="cv">
+  <li><span class="yr">Oct 2026</span><span><a href="https://arxiv.org/abs/2603.06123">Diffusion LMs Are Natively Length-Aware</a> accepted at the NeurIPS 2026 Workshop on Diffusion Language Models.</span></li>
+  <li><span class="yr">Jun 2026</span><span>Trained ACT robot policies from teleoperation at the EuroTech × Hong Kong hackathon.</span></li>
+  <li><span class="yr">May 2026</span><span>Released <a href="https://github.com/ire-research/ire">IRE</a> under MIT for macOS and Linux.</span></li>
+</ul>
+</section>
 
-    </main>
+<section id="research">
+<h2>Research</h2>
+<div class="item">
+  <div class="meta">NeurIPS Workshop · 2026</div>
+  <div class="title">Diffusion Language Models Are Natively Length-Aware</div>
+  <div class="authors"><b>Vittorio Rossi</b>, Giacomo Cirò, Davide Beltrame, Luca Gandolfi, Paul Röttger, Dirk Hovy</div>
+  <p>Masked diffusion LMs know how long their answer will be before decoding. Reading that from one forward pass and cropping the canvas cuts FLOPs by over 30% on every benchmark, up to 90%, with no training and no significant accuracy loss.</p>
+  <div class="links"><a href="https://arxiv.org/abs/2603.06123">arXiv</a></div>
+</div>
+<div class="item">
+  <div class="meta">MSc thesis · in progress</div>
+  <div class="title">Do tokenizer preferences transfer from autoregressive to diffusion models?</div>
+  <p>Diffusion samplers reveal several tokens per step and lose the dependence between them. I test whether that makes them prefer more compressed tokenizers than autoregressive models, across training and sampling budgets.</p>
+</div>
+<div class="item">
+  <div class="meta">BSc thesis · 2024</div>
+  <div class="title">LLM Forecasters: Zero-Shot Time Series Forecasting</div>
+  <p>LLMs as zero-shot forecasters against ARIMA and Prophet, with an evaluation protocol for the emergent skill.</p>
+  <div class="links"><a href="https://github.com/VittorioRossi/llms-for-ts">code</a></div>
+</div>
+</section>
 
-    <footer class="text-center py-8 text-gray-500">
-        <p>&copy; 2025 Vittorio Rossi. All rights reserved.</p>
-    </footer>
+<section id="building">
+<h2>Building</h2>
+<div class="item">
+  <div class="meta">Side project · Rust, TypeScript</div>
+  <div class="title">IRE, Integrated Research Environment</div>
+  <p>A local-first workspace where researchers run Claude Code, Codex or OpenCode behind one interface, with a Git-tracked wiki, structured memory and background experiments.</p>
+  <div class="links"><a href="https://ire-research.com">site</a><a href="https://github.com/ire-research/ire">code</a></div>
+</div>
+<div class="item">
+  <div class="meta">Robotics · 2026</div>
+  <div class="title">VLA-DataEngine</div>
+  <p>ACT policies and a LeRobot dataset trained from SO-101 arm teleoperation, published on Hugging Face.</p>
+  <div class="links"><a href="https://huggingface.co/VittorioRossi/act-eurotech-data2-4k">model</a></div>
+</div>
+<div class="item">
+  <div class="meta">Knowledge graphs · 2025</div>
+  <div class="title">GraphyDocs</div>
+  <p>Turns codebases into knowledge graphs so LLMs can retrieve across repositories larger than their context.</p>
+</div>
+</section>
 
+<section id="contact">
+<h2>Contact</h2>
+<p class="contact">
+  <a href="mailto:rossi.vittori@gmail.com">Email</a>
+  <a href="https://github.com/VittorioRossi">GitHub</a>
+  <a href="https://scholar.google.com/citations?user=wt4HdPAAAAAJ">Scholar</a>
+  <a href="https://www.linkedin.com/in/vitrossi">LinkedIn</a>
+</p>
 
-    <script>
-        // Accessibility & Performance Enhancements
-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+</section>
 
-        // Interactive Starfield Background with FPS cap & reduced motion handling
-        const canvas = document.getElementById('starfield');
-        const ctx = canvas.getContext('2d');
+<footer>Last updated October 2026.</footer>
+</main>
+<script>
+const btn = document.getElementById("theme"), root = document.documentElement;
+const isDark = () => root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+const sync = () => root.classList.toggle("dark-on", isDark());
+btn.onclick = () => {
+  root.classList.add("fade");
+  root.dataset.theme = isDark() ? "light" : "dark";
+  localStorage.setItem("theme", root.dataset.theme);
+  sync();
+  setTimeout(() => root.classList.remove("fade"), 400);
+};
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", sync);
+sync();
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
+// Nav: highlight the section being read and slide the underline to it.
+const sections = [...document.querySelectorAll("main section")];
+const links = Object.fromEntries([...document.querySelectorAll("nav a[href^='#']")].map(a => [a.hash.slice(1), a]));
+const mark = document.getElementById("mark");
+let current;
+function track() {
+  let id;
+  for (const sec of sections) if (sec.getBoundingClientRect().top < innerHeight * .35 && links[sec.id]) id = sec.id;
+  if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) id = "contact";
+  const a = links[id];
+  if (a === current) return;
+  current?.classList.remove("on");
+  current = a;
+  if (!a || !a.offsetParent) { mark.style.opacity = 0; return; }
+  a.classList.add("on");
+  mark.style.opacity = 1;
+  mark.style.width = a.offsetWidth + "px";
+  mark.style.transform = `translateX(${a.offsetLeft}px)`;
+}
+let queued = false;
+addEventListener("scroll", () => { if (!queued) { queued = true; requestAnimationFrame(() => { queued = false; track(); }); } }, { passive: true });
+addEventListener("resize", () => { current = null; track(); });
+track();
 
-        let stars = [];
-        // Fewer stars if reduced motion is requested
-        const numStars = prefersReducedMotion.matches ? 60 : 100;
-        const mouse = { x: undefined, y: undefined };
+// Sections fade in the first time they scroll into view.
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("seen"); io.unobserve(e.target); } }), { threshold: .08 });
+sections.forEach(sec => io.observe(sec));
+</script>
+<canvas id="bg" aria-hidden="true"></canvas>
+<canvas id="fx" aria-hidden="true"></canvas>
+<script>
+// Background: a dot lattice noised and denoised like a diffusion process; every dot follows a
+// smooth deterministic path. On load, the dot predicted to drift past the name becomes it.
+(() => {
+  const root = document.documentElement;
+  const bg = document.getElementById("bg"), bctx = bg.getContext("2d");
+  const fx = document.getElementById("fx"), ctx = fx.getContext("2d");
+  const nameEl = document.getElementById("name"), roleEl = document.getElementById("role");
+  const still = !root.classList.contains("anim");
+  const GAP = 44, CYCLE = 28000, SPREAD = GAP * 2.2, COL = 980;
+  const SEARCH = [500, 1600], LEAD = 1200, DECEL = 600, GROW = 650, FLY = 1300, SETTLE = 500, BACK = 900;
+  const css = n => getComputedStyle(root).getPropertyValue(n).trim();
+  const clamp = x => Math.max(0, Math.min(1, x));
+  const gauss = () => Math.sqrt(-2 * Math.log(1 - Math.random())) * Math.cos(2 * Math.PI * Math.random());
+  const rnd = (a, b) => a + Math.random() * (b - a);
+  const smoother = x => x * x * x * (x * (6 * x - 15) + 10);
+  const inOut = x => x < .5 ? 4 * x * x * x : 1 - (-2 * x + 2) ** 3 / 2;
+  let W, H, dots = [], accent, ink, show = null, zero = null, pending = !still;
+  // Start in the noisy hold so dots wander; the clock starts at the first rendered frame.
+  const OFFSET = CYCLE * .47;
+  const clock = now => now - zero + OFFSET;
+  const reveal = () => { nameEl.classList.add("show"); roleEl.classList.add("show"); };
 
-        // Throttle mousemove (store last time)
-        let lastMouseMove = 0;
-        const mouseThrottleMs = 50; // 20 fps sampling
-        window.addEventListener('mousemove', (event) => {
-            const now = performance.now();
-            if (now - lastMouseMove < mouseThrottleMs) return;
-            lastMouseMove = now;
-            mouse.x = event.x;
-            mouse.y = event.y;
-        });
+  function layout() {
+    const dpr = Math.min(devicePixelRatio || 1, 2);
+    W = innerWidth; H = innerHeight;
+    for (const c of [bg, fx]) { c.width = W * dpr; c.height = H * dpr; c.getContext("2d").setTransform(dpr, 0, 0, dpr, 0, 0); }
+    // Keep existing dots' paths on resize (phone address bar), so nothing jumps.
+    const old = new Map(dots.map(d => [d.x + "," + d.y, d]));
+    dots = [];
+    for (let y = GAP / 2; y < H; y += GAP) for (let x = GAP / 2; x < W; x += GAP)
+      dots.push(old.get(x + "," + y) || { x, y, ax: gauss(), bx: gauss(), ay: gauss(), by: gauss(),
+        w1: rnd(.12, .3), w2: rnd(.12, .3), p1: rnd(0, 6.3), p2: rnd(0, 6.3), p3: rnd(0, 6.3), p4: rnd(0, 6.3), hide: 0 });
+  }
+  const ease = x => smoother(x);
+  function sigma(t) {
+    const p = (t % CYCLE) / CYCLE;
+    const r = p < .2 ? 0 : p < .45 ? ease((p - .2) / .25) : p < .6 ? 1 : p < .85 ? 1 - ease((p - .6) / .25) : 0;
+    return r * SPREAD;
+  }
+  function pos(d, t) {
+    const s = t / 1000, sg = sigma(t);
+    return { x: d.x + (d.ax * Math.cos(d.w1 * s + d.p1) + d.bx * Math.sin(d.w2 * s + d.p2)) * .7071 * sg,
+             y: d.y + (d.ay * Math.cos(d.w2 * s + d.p3) + d.by * Math.sin(d.w1 * s + d.p4)) * .7071 * sg };
+  }
+  const dim = d => { const l = (W - COL) / 2; return d.x > l && d.x < l + COL ? .09 : .24; };
 
-        class Star {
-            constructor() {
-                this.reset(true);
-            }
-            reset(initial = false) {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 2 + 0.5;
-                this.speedX = (Math.random() - 0.5) * 0.2;
-                this.speedY = (Math.random() - 0.5) * 0.2;
-                this.originalSize = this.size;
-                if (!initial && prefersReducedMotion.matches) {
-                    // Slightly smaller baseline for reduced motion upon recycle
-                    this.size = this.originalSize * 0.9;
-                    this.originalSize = this.size;
-                }
-            }
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-                if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
-                    this.reset();
-                }
-                if (!prefersReducedMotion.matches && mouse.x !== undefined) {
-                    // Interactive effect: stars get bigger near mouse
-                    const dx = mouse.x - this.x;
-                    const dy = mouse.y - this.y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-                    if (distance < 100) {
-                        this.size = this.originalSize + (100 - distance) / 20;
-                    } else {
-                        this.size = this.originalSize;
-                    }
-                } else {
-                    this.size = this.originalSize; // keep stable
-                }
-            }
-            draw() {
-                ctx.fillStyle = 'rgba(229, 231, 235, 0.8)';
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fill();
-            }
-        }
+  function textRect(el) { const g = document.createRange(); g.selectNodeContents(el); return g.getBoundingClientRect(); }
+  function sampleName(el, step) {
+    const r = el.getBoundingClientRect(), cs = getComputedStyle(el);
+    const off = document.createElement("canvas"), o = off.getContext("2d");
+    off.width = Math.ceil(r.width); off.height = Math.ceil(r.height);
+    o.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+    o.letterSpacing = cs.letterSpacing;
+    // Match CSS: the font's content box is centred in the line box, text sits on its baseline.
+    const m = o.measureText(el.textContent), asc = m.fontBoundingBoxAscent, desc = m.fontBoundingBoxDescent;
+    const lh = parseFloat(cs.lineHeight) || r.height;
+    o.textBaseline = "alphabetic"; o.fillStyle = "#000";
+    o.fillText(el.textContent, 0, (lh - asc - desc) / 2 + asc);
+    const data = o.getImageData(0, 0, off.width, off.height).data, pts = [];
+    for (let y = 0; y < off.height; y += step) for (let x = 0; x < off.width; x += step)
+      if (data[(y * off.width + x) * 4 + 3] > 140) pts.push({ x: r.left + x, y: r.top + y });
+    return pts;
+  }
 
-        function init() {
-            stars = [];
-            for (let i = 0; i < numStars; i++) {
-                stars.push(new Star());
-            }
-        }
+  function start(now) {
+    if (nameEl.classList.contains("show")) return;
+    const tr = textRect(nameEl);
+    if (tr.bottom < 0 || tr.top > H) { reveal(); return; }   // loaded scrolled past the name
+    const target = { x: tr.left - 22, y: tr.top + tr.height / 2 };
+    // Pick the dot whose own path passes closest to the target soon.
+    let best = null, bd = Infinity;
+    for (let ms = SEARCH[0]; ms <= SEARCH[1]; ms += 40) {
+      const t = clock(now + ms);
+      for (const d of dots) {
+        const p = pos(d, t), dd = (p.x - target.x) ** 2 + (p.y - target.y) ** 2;
+        if (dd < bd) { bd = dd; best = { dot: d, arrive: now + ms }; }
+      }
+    }
+    const p = pos(best.dot, clock(best.arrive));
+    show = { ...best, lead: Math.min(LEAD, best.arrive - now), target, scroll: scrollY,
+      err: { x: target.x - p.x, y: target.y - p.y }, pts: sampleName(nameEl, W < 520 ? 3 : 2), parts: null };
+  }
+  function end() { if (show) show.dot.hide = 0; show = null; ctx.clearRect(0, 0, W, H); reveal(); }
 
-        // Frame rate capping
-        const targetFps = prefersReducedMotion.matches ? 20 : 40; // lower for reduced motion
-        const frameInterval = 1000 / targetFps;
-        let lastFrameTime = 0;
+  function drawShow(now, t) {
+    if (Math.abs(scrollY - show.scroll) > 2) return end();   // scrolled mid-show: just show the name
+    if (now < show.arrive - show.lead) return;
+    const d = show.dot, a = show.target, e = now - show.arrive, D = Math.min(DECEL, 2 * show.lead);
+    // Path time runs 1:1 with the clock, then decelerates to rest exactly at the target.
+    const u = e + D / 2, tau = u <= 0 ? e : u < D ? -D / 2 + u - u * u / (2 * D) : 0;
+    const p = pos(d, clock(show.arrive) + tau), c = smoother(clamp(1 + tau / show.lead));
+    const nx = p.x + show.err.x * c, ny = p.y + show.err.y * c;
+    // Swell begins while the dot is still slowing; the burst begins while it is still swelling.
+    const pe = e + D / 4 - GROW * .55;
+    d.hide = pe < FLY + SETTLE ? 1 : 1 - clamp((pe - FLY - SETTLE) / BACK);
+    const lit = smoother(clamp(1 + e / show.lead)), base = dim(d);
+    const g = smoother(clamp((e + D / 4) / GROW)), leave = smoother(clamp(pe / 700));
+    const rad = (1.4 + 1.6 * lit + 12 * g) * (1 - leave);
+    const alpha = (base + (.9 - base) * lit) * (1 - leave * .7);
+    if (leave < 1) {
+      ctx.fillStyle = accent;
+      ctx.globalAlpha = .18 * alpha * lit; ctx.beginPath(); ctx.arc(nx, ny, rad * 1.9, 0, 6.283); ctx.fill();
+      ctx.globalAlpha = alpha; ctx.beginPath(); ctx.arc(nx, ny, rad, 0, 6.283); ctx.fill();
+    }
+    if (pe > 0) {
+      show.parts ??= show.pts.map(q => {
+        const sx = a.x + gauss() * 3, sy = a.y + gauss() * 3;
+        return { sx, sy, mx: (sx + q.x) / 2 + gauss() * 60, my: (sy + q.y) / 2 + gauss() * 45, tx: q.x, ty: q.y, delay: Math.random() * 450 };
+      });
+      const fade = clamp((pe - FLY - 150) / SETTLE);
+      if (fade < 1) for (const q of show.parts) {
+        const m = inOut(clamp((pe - q.delay) / (FLY - 450)));
+        if (m <= 0) continue;
+        const r = 1 - m, x = r * r * q.sx + 2 * r * m * q.mx + m * m * q.tx, y = r * r * q.sy + 2 * r * m * q.my + m * m * q.ty;
+        ctx.globalAlpha = (1 - fade) * .95; ctx.fillStyle = m > .85 ? ink : accent;
+        ctx.fillRect(x - .9, y - .9, 1.8, 1.8);
+      }
+      if (pe > FLY - 100) reveal();
+    }
+    if (pe > FLY + SETTLE + BACK) end();
+  }
 
-        function animate(now) {
-            if (!lastFrameTime) lastFrameTime = now;
-            const delta = now - lastFrameTime;
-            if (delta >= frameInterval) {
-                lastFrameTime = now - (delta % frameInterval);
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                for (let i = 0; i < stars.length; i++) {
-                    stars[i].update();
-                    stars[i].draw();
-                }
-            }
-            requestAnimationFrame(animate);
-        }
+  function frame(now) {
+    zero ??= now;
+    if (pending) { pending = false; start(now); }
+    const t = clock(now);
+    bctx.clearRect(0, 0, W, H); bctx.fillStyle = accent;
+    for (const d of dots) {
+      if (d.hide >= 1) continue;
+      const p = pos(d, t);
+      bctx.globalAlpha = dim(d) * (1 - d.hide);
+      bctx.beginPath(); bctx.arc(p.x, p.y, 1.4, 0, 6.283); bctx.fill();
+    }
+    ctx.clearRect(0, 0, W, H);
+    if (show) drawShow(now, t);
+    if (!still) requestAnimationFrame(frame);
+  }
 
-        // React to changes in prefers-reduced-motion dynamically
-        prefersReducedMotion.addEventListener('change', () => {
-            init();
-        });
-
-        init();
-        requestAnimationFrame(animate);
-    </script>
-    <script src="js/projects.js"></script>
-    
-    <!-- Vercel Analytics -->
-    <script>
-      window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
-    </script>
-    <script defer src="/_vercel/insights/script.js"></script>
+  const colors = () => { accent = css("--accent"); ink = css("--ink"); };
+  let lastW = innerWidth;
+  addEventListener("resize", () => {
+    layout();
+    if (innerWidth !== lastW && show) { lastW = innerWidth; end(); }
+    if (still) frame(zero ?? 0);
+  });
+  new MutationObserver(colors).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", colors);
+  colors(); layout();
+  if (still) { requestAnimationFrame(frame); return; }
+  // Never leave the name hidden: fonts are needed to sample the glyphs, so wait for them, but not forever.
+  const go = () => { if (zero === null) requestAnimationFrame(frame); };
+  Promise.race([document.fonts.load('600 43px "Source Serif 4"').then(() => document.fonts.ready), new Promise(r => setTimeout(r, 2500))]).then(go);
+  setTimeout(() => { if (!nameEl.classList.contains("show") && !show) reveal(); }, 9000);
+})();
+</script>
+<script defer src="/_vercel/insights/script.js"></script>
 </body>
 </html>
