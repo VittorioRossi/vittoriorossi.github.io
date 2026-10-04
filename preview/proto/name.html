@@ -45,7 +45,7 @@
   <h1 id="name">Vittorio Rossi</h1>
   <div class="role" id="role">AI engineer &amp; researcher · Milan</div>
   <p class="lede">I build LLM systems that run in production and study how generative models spend their compute.</p>
-  <p class="note">A dot is pulled out of the moving lattice, swells, and bursts into the name. Replay to watch again.</p>
+  <p class="note">A dot already drifting toward the name is picked from the moving lattice; it arrives on its own path, swells, and bursts into the name. Replay to watch again.</p>
 </main>
 <div class="panel">
   <button id="replay" class="on">replay</button>
@@ -73,9 +73,11 @@ function layout() {
   const dpr = Math.min(devicePixelRatio || 1, 2);
   W = innerWidth; H = innerHeight;
   for (const c of [bg, fx]) { c.width = W * dpr; c.height = H * dpr; c.getContext("2d").setTransform(dpr, 0, 0, dpr, 0, 0); }
+  // Keep existing dots' paths on resize (phone address bar), so nothing jumps.
+  const old = new Map(dots.map(d => [d.x + "," + d.y, d]));
   dots = [];
   for (let y = GAP / 2; y < H; y += GAP) for (let x = GAP / 2; x < W; x += GAP)
-    dots.push({ x, y, ax: gauss(), bx: gauss(), ay: gauss(), by: gauss(),
+    dots.push(old.get(x + "," + y) || { x, y, ax: gauss(), bx: gauss(), ay: gauss(), by: gauss(),
       w1: rnd(.12, .3), w2: rnd(.12, .3), p1: rnd(0, 6.3), p2: rnd(0, 6.3), p3: rnd(0, 6.3), p4: rnd(0, 6.3), hide: 0 });
 }
 function sigma(t) {
@@ -89,9 +91,11 @@ function pos(d, t) {
            y: d.y + (d.ay * Math.cos(d.w2 * s + d.p3) + d.by * Math.sin(d.w1 * s + d.p4)) * .7071 * sg };
 }
 const dim = d => { const l = (W - COL) / 2; return d.x > l && d.x < l + COL ? .09 : .24; };
-// Start late in denoising: the grid is readable but still moving, and settles as the name forms.
-const OFFSET = CYCLE * .755;
-const clock = now => now + OFFSET;
+// Start in the noisy hold so dots wander; the lattice denoises after the name has formed.
+const OFFSET = CYCLE * .47;
+// Clocks start at the first rendered frame, so a background tab doesn't skip the show.
+let zero = null, pending = true;
+const clock = now => now - zero + OFFSET;
 function drawLattice(t) {
   bctx.clearRect(0, 0, W, H); bctx.fillStyle = accent;
   for (const d of dots) {
@@ -121,51 +125,58 @@ function sampleName(el, step) {
   return pts;
 }
 
-// Timeline (ms after the pull starts)
-const WAIT = 900, PULL = 1100, GROW = 650, FLY = 1300, SETTLE = 500, BACK = 900;
+// Timel// Timeline. The node is a dot whose own path passes left of the name; we predict which.
+const SEARCH = [800, 3200], LEAD = 1200, GROW = 650, FLY = 1300, SETTLE = 500, BACK = 900;
 let show = null;
 
 function start(now) {
   nameEl.classList.remove("show"); roleEl.classList.remove("show");
   for (const d of dots) d.hide = 0;
   const tr = textRect(nameEl);
-  const anchor = { x: tr.left + tr.width * .62, y: tr.top + tr.height / 2 };
-  // Pull a random dot from the left margin; on narrow screens, any dot above the fold.
-  const l = (W - COL) / 2;
-  let pool = dots.filter(d => d.x < l - GAP / 2 && d.y < H * .8);
-  if (!pool.length) pool = dots.filter(d => d.y < H * .6);
-  const best = pool[Math.floor(Math.random() * pool.length)];
-  const pts = sampleName(nameEl, W < 520 ? 3 : 2);
-  show = { t0: now + WAIT, dot: best, anchor, pts, parts: null, bend: gauss() * 60 };
+  const target = { x: tr.left - 22, y: tr.top + tr.height / 2 };
+  // Closest approach of every dot to the target over the search window.
+  let best = null, bd = Infinity;
+  for (let ms = SEARCH[0]; ms <= SEARCH[1]; ms += 40) {
+    const t = clock(now + ms);
+    for (const d of dots) {
+      const p = pos(d, t), dd = (p.x - target.x) ** 2 + (p.y - target.y) ** 2;
+      if (dd < bd) { bd = dd; best = { dot: d, arrive: now + ms }; }
+    }
+  }
+  const p = pos(best.dot, clock(best.arrive));
+  show = { ...best, target, err: { x: target.x - p.x, y: target.y - p.y }, pts: sampleName(nameEl, W < 520 ? 3 : 2), parts: null };
 }
 
 function frame(now) {
+  zero ??= now;
+  if (pending) { pending = false; start(now); }
   const t = clock(now);
   drawLattice(t);
   ctx.clearRect(0, 0, W, H);
-  if (show && now >= show.t0) {
-    const e = now - show.t0, d = show.dot, a = show.anchor;
-    // 1. pull: the dot leaves the lattice and glides to the name, brightening
-    const k = inOut(clamp(e / PULL));
-    d.hide = e < PULL + GROW + FLY + SETTLE ? 1 : 1 - clamp((e - PULL - GROW - FLY - SETTLE) / BACK);
-    const p0 = pos(d, t);
-    const mx = (p0.x + a.x) / 2, my = Math.min(p0.y, a.y) - 40 + show.bend * .3;
-    const q = 1 - k, nx = q * q * p0.x + 2 * q * k * mx + k * k * a.x, ny = q * q * p0.y + 2 * q * k * my + k * k * a.y;
-    // 2. swell at the anchor, 3. empty out as particles leave
-    const g = clamp((e - PULL) / GROW), leave = clamp((e - PULL - GROW) / 450);
-    const rad = 1.4 + 2.6 * smoother(clamp(e / 400)) + 12 * outBack(g) * (1 - out(leave));
-    const alpha = (dim(d) + (.9 - dim(d)) * clamp(e / 300)) * (1 - leave * .7);
-    if (rad > .3 && leave < 1) {
+  if (show && now >= show.arrive - LEAD) {
+    const d = show.dot, a = show.target, e = now - show.arrive;
+    // Approach: the dot keeps its own path and speed; a small correction fades in so it lands exactly.
+    let nx = a.x, ny = a.y;
+    if (e < 0) {
+      const p = pos(d, t), c = smoother(clamp(1 + e / LEAD));
+      nx = p.x + show.err.x * c; ny = p.y + show.err.y * c;
+    }
+    d.hide = e < GROW + FLY + SETTLE ? 1 : 1 - clamp((e - GROW - FLY - SETTLE) / BACK);
+    const lit = smoother(clamp(1 + e / LEAD)), base = dim(d);
+    const g = clamp(e / GROW), leave = clamp((e - GROW) / 450);
+    const rad = 1.4 + 1.6 * lit + 12 * outBack(g) * (1 - out(leave));
+    const alpha = (base + (.9 - base) * lit) * (1 - leave * .7);
+    if (leave < 1) {
       ctx.fillStyle = accent;
-      ctx.globalAlpha = .18 * alpha; ctx.beginPath(); ctx.arc(nx, ny, rad * 1.9, 0, 6.283); ctx.fill();
+      ctx.globalAlpha = .18 * alpha * lit; ctx.beginPath(); ctx.arc(nx, ny, rad * 1.9, 0, 6.283); ctx.fill();
       ctx.globalAlpha = alpha; ctx.beginPath(); ctx.arc(nx, ny, rad, 0, 6.283); ctx.fill();
     }
-    // 4. particles flow from the node into the letters
-    const pe = e - PULL - GROW;
+    // Burst: particles flow from the node into the letters.
+    const pe = e - GROW;
     if (pe > 0) {
       show.parts ??= show.pts.map(p => {
         const sx = a.x + gauss() * 3, sy = a.y + gauss() * 3;
-        return { sx, sy, mx: (sx + p.x) / 2 + gauss() * 70, my: (sy + p.y) / 2 + gauss() * 50, tx: p.x, ty: p.y, delay: Math.random() * 450 };
+        return { sx, sy, mx: (sx + p.x) / 2 + gauss() * 60, my: (sy + p.y) / 2 + gauss() * 45, tx: p.x, ty: p.y, delay: Math.random() * 450 };
       });
       const fade = clamp((pe - FLY - 150) / SETTLE);
       if (fade < 1) for (const p of show.parts) {
@@ -177,21 +188,22 @@ function frame(now) {
       }
       if (pe > FLY - 100) { nameEl.classList.add("show"); roleEl.classList.add("show"); }
     }
-    if (e > PULL + GROW + FLY + SETTLE + BACK) { d.hide = 0; show = null; }
+    if (e > GROW + FLY + SETTLE + BACK) { d.hide = 0; show = null; }
   }
   requestAnimationFrame(frame);
 }
 
 function colors() { accent = css("--accent"); ink = css("--ink"); }
-document.getElementById("replay").onclick = () => start(performance.now());
+document.getElementById("replay").onclick = () => { pending = true; };
 document.getElementById("theme").onclick = () => {
   const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
   root.dataset.theme = dark ? "light" : "dark"; localStorage.setItem("theme", root.dataset.theme);
   colors();
 };
-addEventListener("resize", () => { layout(); start(performance.now()); });
+let lastW = innerWidth;
+addEventListener("resize", () => { layout(); if (innerWidth !== lastW) { lastW = innerWidth; pending = true; } });
 document.fonts.load('600 43px "Source Serif 4"').then(() => document.fonts.ready).then(() => {
-  colors(); layout(); start(performance.now()); requestAnimationFrame(frame);
+  colors(); layout(); requestAnimationFrame(frame);
 });
 </script>
 <script src="/draft.js" defer></script>

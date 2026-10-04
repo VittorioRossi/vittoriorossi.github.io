@@ -255,9 +255,11 @@ sections.forEach(sec => io.observe(sec));
     const dpr = Math.min(devicePixelRatio || 1, 2);
     W = innerWidth; H = innerHeight;
     cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    // Keep existing dots' paths on resize (phone address bar), so nothing jumps.
+    const old = new Map(dots.map(d => [d.x + "," + d.y, d]));
     dots = [];
     for (let y = GAP / 2; y < H; y += GAP) for (let x = GAP / 2; x < W; x += GAP)
-      dots.push({ x, y, ax: gauss(), bx: gauss(), ay: gauss(), by: gauss(),
+      dots.push(old.get(x + "," + y) || { x, y, ax: gauss(), bx: gauss(), ay: gauss(), by: gauss(),
         w1: rnd(.12, .3), w2: rnd(.12, .3), p1: rnd(0, 6.3), p2: rnd(0, 6.3), p3: rnd(0, 6.3), p4: rnd(0, 6.3) });
   }
   const ease = x => x * x * x * (x * (6 * x - 15) + 10);
