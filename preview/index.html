@@ -30,7 +30,7 @@ if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElem
 
   nav { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--paper) 88%, transparent);
     backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
-  nav .in { max-width: 780px; margin: 0 auto; padding: 10px 20px; display: flex; align-items: center; gap: 18px; }
+  nav .in { max-width: 980px; margin: 0 auto; padding: 10px 20px; display: flex; align-items: center; gap: 18px; }
   nav a { text-decoration: none; font-variant: small-caps; letter-spacing: .06em; font-size: .9em; color: var(--muted); }
   nav a:hover { color: var(--accent); }
   nav .home { color: var(--ink); font-weight: 600; margin-right: auto; font-variant: normal; letter-spacing: 0; }
@@ -56,7 +56,7 @@ if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElem
   #fx { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 5; pointer-events: none; }
   @media print { html.anim section, html.anim h1, html.anim .role { opacity: 1; transform: none; } #bg, #fx, nav { display: none; } }
 
-  main { max-width: 780px; margin: 0 auto; padding: 48px 20px 80px; }
+  main { max-width: 980px; margin: 0 auto; padding: 48px 20px 80px; }
   h1 { font-size: 2.4em; line-height: 1.1; font-weight: 600; letter-spacing: -.012em; margin: 0; }
   .role { font-variant: small-caps; letter-spacing: .06em; color: var(--accent); margin-top: 6px; }
 
@@ -80,7 +80,7 @@ if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElem
   .contact a { margin-right: 18px; }
   .dm-dots { color: var(--muted) !important; }
   footer { margin-top: 64px; color: var(--muted); font-size: .85em; font-style: italic; }
-  @media (max-width: 860px) { nav .in { padding-right: 52px; } }
+  @media (max-width: 1060px) { nav .in { padding-right: 52px; } }
   @media (max-width: 520px) {
     body { font-size: 17px; }
     main { padding-top: 32px; }
@@ -191,8 +191,6 @@ On the side I build <a href="https://ire-research.com">IRE</a>, an open-source e
 <h2>Contact</h2>
 <p class="contact">
   <a href="mailto:rossi.vittori@gmail.com">Email</a>
-  <a href="cv-engineer.pdf">CV</a>
-  <a href="cv-research.pdf">Research CV</a>
   <a href="https://github.com/VittorioRossi">GitHub</a>
   <a href="https://scholar.google.com/citations?user=wt4HdPAAAAAJ">Scholar</a>
   <a href="https://www.linkedin.com/in/vitrossi">LinkedIn</a>
@@ -255,7 +253,7 @@ sections.forEach(sec => io.observe(sec));
   const fx = document.getElementById("fx"), ctx = fx.getContext("2d");
   const nameEl = document.getElementById("name"), roleEl = document.getElementById("role");
   const still = !root.classList.contains("anim");
-  const GAP = 44, CYCLE = 28000, SPREAD = GAP * 2.2, COL = 780;
+  const GAP = 44, CYCLE = 28000, SPREAD = GAP * 2.2, COL = 980;
   const SEARCH = [500, 1600], LEAD = 1200, DECEL = 600, GROW = 650, FLY = 1300, SETTLE = 500, BACK = 900;
   const css = n => getComputedStyle(root).getPropertyValue(n).trim();
   const clamp = x => Math.max(0, Math.min(1, x));
