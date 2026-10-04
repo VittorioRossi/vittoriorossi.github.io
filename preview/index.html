@@ -7,7 +7,8 @@
 <meta name="description" content="AI engineer and researcher in Milan. Founding AI engineer at Commerce Clarity; diffusion language models; builds IRE on the side.">
 <meta name="theme-color" content="#f5f3ee" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#151614" media="(prefers-color-scheme: dark)">
-<script>const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t;</script>
+<script>const t=localStorage.getItem("theme");if(t)document.documentElement.dataset.theme=t;
+if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElement.classList.add("anim");</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
 <style>
@@ -33,9 +34,22 @@
   nav a { text-decoration: none; font-variant: small-caps; letter-spacing: .06em; font-size: .9em; color: var(--muted); }
   nav a:hover { color: var(--accent); }
   nav .home { color: var(--ink); font-weight: 600; margin-right: auto; font-variant: normal; letter-spacing: 0; }
-  #theme { background: none; border: 1px solid var(--line); border-radius: 999px; color: var(--muted);
-    font: inherit; font-size: .85em; padding: 1px 10px; cursor: pointer; }
-  #theme:hover { color: var(--accent); border-color: var(--accent); }
+  nav .in { position: relative; }
+  nav a.on { color: var(--accent); }
+  #mark { position: absolute; bottom: -1px; left: 0; height: 2px; width: 0; background: var(--accent); opacity: 0;
+    transition: transform .35s cubic-bezier(.2,.7,.2,1), width .35s cubic-bezier(.2,.7,.2,1), opacity .25s; }
+  #theme { background: none; border: 0; color: var(--muted); padding: 4px; margin: -4px 0; cursor: pointer;
+    display: grid; place-items: center; border-radius: 999px; }
+  #theme:hover { color: var(--accent); }
+  #theme svg { width: 19px; height: 19px; display: block; }
+  #theme .sun { display: none; }
+  .dark-on #theme .sun { display: block; } .dark-on #theme .moon { display: none; }
+
+  html.fade, html.fade * { transition: background-color .35s ease, color .35s ease, border-color .35s ease,
+    text-decoration-color .35s ease, fill .35s ease !important; }
+  html.anim section { opacity: 0; transform: translateY(10px); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.7,.2,1); }
+  html.anim section.seen { opacity: 1; transform: none; }
+  @media print { html.anim section { opacity: 1; transform: none; } #bg, nav { display: none; } }
 
   main { max-width: 680px; margin: 0 auto; padding: 48px 20px 80px; }
   h1 { font-size: 2.4em; line-height: 1.1; font-weight: 600; letter-spacing: -.012em; margin: 0; }
@@ -81,7 +95,11 @@
   <a href="#research">research</a>
   <a href="#building">building</a>
   <a href="#contact">contact</a>
-  <button id="theme" type="button" aria-label="Toggle dark mode">dark</button>
+  <button id="theme" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">
+    <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg>
+    <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></svg>
+  </button>
+  <span id="mark"></span>
 </div></nav>
 <main id="top">
 
@@ -91,7 +109,7 @@
 <p>I build LLM systems that run in production and study how generative models spend their compute.
 I am the founding AI engineer at <a href="https://commerceclarity.ai">Commerce Clarity</a>, where I own the
 workflow engine and LLM layer behind <b>10M+ production calls</b>. My research is on
-<b>diffusion language models</b>: how much sequential work sampling really needs, and how to skip the rest.
+<b>diffusion language models</b>: how they generate many tokens in parallel, and how to make that cheaper.
 On the side I build <a href="https://ire-research.com">IRE</a>, an open-source environment for doing research with AI agents.</p>
 <p>I finish my MSc in Artificial Intelligence at Bocconi in December 2026.</p>
 
@@ -126,8 +144,8 @@ On the side I build <a href="https://ire-research.com">IRE</a>, an open-source e
 </div>
 <div class="item">
   <div class="meta">MSc thesis · in progress</div>
-  <div class="title">The serial cost of sampling</div>
-  <p>How many sequential steps autoregressive, diffusion and one-step generators actually need, measured in one framework.</p>
+  <div class="title">Do tokenizer preferences transfer from autoregressive to diffusion models?</div>
+  <p>Diffusion samplers reveal several tokens per step and lose the dependence between them. I test whether that makes them prefer more compressed tokenizers than autoregressive models, across training and sampling budgets.</p>
 </div>
 <div class="item">
   <div class="meta">BSc thesis · 2024</div>
@@ -182,50 +200,90 @@ On the side I build <a href="https://ire-research.com">IRE</a>, an open-source e
 <script>
 const btn = document.getElementById("theme"), root = document.documentElement;
 const isDark = () => root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
-const label = () => btn.textContent = isDark() ? "light" : "dark";
-btn.onclick = () => { root.dataset.theme = isDark() ? "light" : "dark"; localStorage.setItem("theme", root.dataset.theme); label(); };
-label();
+const sync = () => root.classList.toggle("dark-on", isDark());
+btn.onclick = () => {
+  root.classList.add("fade");
+  root.dataset.theme = isDark() ? "light" : "dark";
+  localStorage.setItem("theme", root.dataset.theme);
+  sync();
+  setTimeout(() => root.classList.remove("fade"), 400);
+};
+matchMedia("(prefers-color-scheme: dark)").addEventListener("change", sync);
+sync();
+
+// Nav: highlight the section being read and slide the underline to it.
+const sections = [...document.querySelectorAll("main section")];
+const links = Object.fromEntries([...document.querySelectorAll("nav a[href^='#']")].map(a => [a.hash.slice(1), a]));
+const mark = document.getElementById("mark");
+let current;
+function track() {
+  let id;
+  for (const sec of sections) if (sec.getBoundingClientRect().top < innerHeight * .35 && links[sec.id]) id = sec.id;
+  if (innerHeight + scrollY >= document.documentElement.scrollHeight - 4) id = "contact";
+  const a = links[id];
+  if (a === current) return;
+  current?.classList.remove("on");
+  current = a;
+  if (!a || !a.offsetParent) { mark.style.opacity = 0; return; }
+  a.classList.add("on");
+  mark.style.opacity = 1;
+  mark.style.width = a.offsetWidth + "px";
+  mark.style.transform = `translateX(${a.offsetLeft}px)`;
+}
+let queued = false;
+addEventListener("scroll", () => { if (!queued) { queued = true; requestAnimationFrame(() => { queued = false; track(); }); } }, { passive: true });
+addEventListener("resize", () => { current = null; track(); });
+track();
+
+// Sections fade in the first time they scroll into view.
+const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("seen"); io.unobserve(e.target); } }), { threshold: .08 });
+sections.forEach(sec => io.observe(sec));
 </script>
 <canvas id="bg" aria-hidden="true"></canvas>
 <script>
-// Background: a dot lattice that is slowly noised and denoised, like a diffusion process.
+// Background: a dot lattice noised and denoised like a diffusion process.
+// Each dot follows a smooth deterministic path, so the motion never jitters.
 (() => {
   const cv = document.getElementById("bg"), ctx = cv.getContext("2d");
-  const still = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const GAP = 44, CYCLE = 26000;
+  const still = !document.documentElement.classList.contains("anim");
+  const GAP = 44, CYCLE = 28000, SPREAD = GAP * 2.2;
   let W, H, dots = [], color = "#2e7d4f";
   const readColor = () => { color = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim(); };
   const gauss = () => Math.sqrt(-2 * Math.log(1 - Math.random())) * Math.cos(2 * Math.PI * Math.random());
+  const rnd = (a, b) => a + Math.random() * (b - a);
   function layout() {
     const dpr = Math.min(devicePixelRatio || 1, 2);
     W = innerWidth; H = innerHeight;
     cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     dots = [];
     for (let y = GAP / 2; y < H; y += GAP) for (let x = GAP / 2; x < W; x += GAP)
-      dots.push({ x, y, nx: gauss(), ny: gauss() });
+      dots.push({ x, y, ax: gauss(), bx: gauss(), ay: gauss(), by: gauss(),
+        w1: rnd(.12, .3), w2: rnd(.12, .3), p1: rnd(0, 6.3), p2: rnd(0, 6.3), p3: rnd(0, 6.3), p4: rnd(0, 6.3) });
   }
-  // alpha-bar schedule: hold clean, noise up, hold noisy, denoise back.
-  function abar(t) {
+  const ease = x => x * x * x * (x * (6 * x - 15) + 10);
+  // Noise level: hold clean, rise, hold noisy, fall; zero velocity at every turn.
+  function sigma(t) {
     const p = (t % CYCLE) / CYCLE;
-    const ramp = p < .25 ? 0 : p < .5 ? (p - .25) / .25 : p < .65 ? 1 : p < .9 ? 1 - (p - .65) / .25 : 0;
-    return Math.cos(ramp * Math.PI / 2) ** 2;
+    const r = p < .2 ? 0 : p < .45 ? ease((p - .2) / .25) : p < .6 ? 1 : p < .85 ? 1 - ease((p - .6) / .25) : 0;
+    return r * SPREAD;
   }
   function frame(t) {
-    const a = abar(t), sn = Math.sqrt(1 - a) * GAP * 2.2;
+    const sg = sigma(t), s = t / 1000;
     ctx.clearRect(0, 0, W, H);
     ctx.fillStyle = color;
     const left = (W - 680) / 2, right = left + 680;
     for (const d of dots) {
+      const nx = (d.ax * Math.cos(d.w1 * s + d.p1) + d.bx * Math.sin(d.w2 * s + d.p2)) * .7071;
+      const ny = (d.ay * Math.cos(d.w2 * s + d.p3) + d.by * Math.sin(d.w1 * s + d.p4)) * .7071;
       ctx.globalAlpha = d.x > left && d.x < right ? .09 : .24;
-      d.nx += (-.004 * d.nx + .06 * gauss()) * .3; d.ny += (-.004 * d.ny + .06 * gauss()) * .3;
       ctx.beginPath();
-      ctx.arc(d.x + d.nx * sn, d.y + d.ny * sn, 1.4, 0, 6.283);
+      ctx.arc(d.x + nx * sg, d.y + ny * sg, 1.4, 0, 6.283);
       ctx.fill();
     }
     if (!still) requestAnimationFrame(frame);
   }
   readColor(); layout();
-  addEventListener("resize", layout);
+  addEventListener("resize", () => { layout(); if (still) frame(0); });
   new MutationObserver(readColor).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
   matchMedia("(prefers-color-scheme: dark)").addEventListener("change", readColor);
   requestAnimationFrame(frame);
