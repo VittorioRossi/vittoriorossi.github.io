@@ -49,7 +49,12 @@ if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElem
     text-decoration-color .35s ease, fill .35s ease !important; }
   html.anim section { opacity: 0; transform: translateY(10px); transition: opacity .8s ease, transform .8s cubic-bezier(.2,.7,.2,1); }
   html.anim section.seen { opacity: 1; transform: none; }
-  @media print { html.anim section { opacity: 1; transform: none; } #bg, nav { display: none; } }
+  html.anim h1:not(.show) { opacity: 0; }
+  html.anim h1.show { opacity: 1; transition: opacity .5s ease; }
+  html.anim .role { opacity: 0; transform: translateY(6px); transition: opacity .7s ease .1s, transform .7s ease .1s; }
+  html.anim .role.show { opacity: 1; transform: none; }
+  #fx { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 5; pointer-events: none; }
+  @media print { html.anim section, html.anim h1, html.anim .role { opacity: 1; transform: none; } #bg, #fx, nav { display: none; } }
 
   main { max-width: 680px; margin: 0 auto; padding: 48px 20px 80px; }
   h1 { font-size: 2.4em; line-height: 1.1; font-weight: 600; letter-spacing: -.012em; margin: 0; }
@@ -103,8 +108,8 @@ if(!matchMedia("(prefers-reduced-motion: reduce)").matches)document.documentElem
 </div></nav>
 <main id="top">
 
-<h1>Vittorio Rossi</h1>
-<div class="role">AI engineer &amp; researcher · Milan</div>
+<h1 id="name">Vittorio Rossi</h1>
+<div class="role" id="role">AI engineer &amp; researcher · Milan</div>
 
 <p>I build LLM systems that run in production and study how generative models spend their compute.
 I am the founding AI engineer at <a href="https://commerceclarity.ai">Commerce Clarity</a>, where I own the
@@ -240,55 +245,161 @@ const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting
 sections.forEach(sec => io.observe(sec));
 </script>
 <canvas id="bg" aria-hidden="true"></canvas>
+<canvas id="fx" aria-hidden="true"></canvas>
 <script>
-// Background: a dot lattice noised and denoised like a diffusion process.
-// Each dot follows a smooth deterministic path, so the motion never jitters.
+// Background: a dot lattice noised and denoised like a diffusion process; every dot follows a
+// smooth deterministic path. On load, the dot predicted to drift past the name becomes it.
 (() => {
-  const cv = document.getElementById("bg"), ctx = cv.getContext("2d");
-  const still = !document.documentElement.classList.contains("anim");
-  const GAP = 44, CYCLE = 28000, SPREAD = GAP * 2.2;
-  let W, H, dots = [], color = "#2e7d4f";
-  const readColor = () => { color = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim(); };
+  const root = document.documentElement;
+  const bg = document.getElementById("bg"), bctx = bg.getContext("2d");
+  const fx = document.getElementById("fx"), ctx = fx.getContext("2d");
+  const nameEl = document.getElementById("name"), roleEl = document.getElementById("role");
+  const still = !root.classList.contains("anim");
+  const GAP = 44, CYCLE = 28000, SPREAD = GAP * 2.2, COL = 680;
+  const SEARCH = [500, 1600], LEAD = 1200, DECEL = 600, GROW = 650, FLY = 1300, SETTLE = 500, BACK = 900;
+  const css = n => getComputedStyle(root).getPropertyValue(n).trim();
+  const clamp = x => Math.max(0, Math.min(1, x));
   const gauss = () => Math.sqrt(-2 * Math.log(1 - Math.random())) * Math.cos(2 * Math.PI * Math.random());
   const rnd = (a, b) => a + Math.random() * (b - a);
+  const smoother = x => x * x * x * (x * (6 * x - 15) + 10);
+  const inOut = x => x < .5 ? 4 * x * x * x : 1 - (-2 * x + 2) ** 3 / 2;
+  let W, H, dots = [], accent, ink, show = null, zero = null, pending = !still;
+  // Start in the noisy hold so dots wander; the clock starts at the first rendered frame.
+  const OFFSET = CYCLE * .47;
+  const clock = now => now - zero + OFFSET;
+  const reveal = () => { nameEl.classList.add("show"); roleEl.classList.add("show"); };
+
   function layout() {
     const dpr = Math.min(devicePixelRatio || 1, 2);
     W = innerWidth; H = innerHeight;
-    cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    for (const c of [bg, fx]) { c.width = W * dpr; c.height = H * dpr; c.getContext("2d").setTransform(dpr, 0, 0, dpr, 0, 0); }
     // Keep existing dots' paths on resize (phone address bar), so nothing jumps.
     const old = new Map(dots.map(d => [d.x + "," + d.y, d]));
     dots = [];
     for (let y = GAP / 2; y < H; y += GAP) for (let x = GAP / 2; x < W; x += GAP)
       dots.push(old.get(x + "," + y) || { x, y, ax: gauss(), bx: gauss(), ay: gauss(), by: gauss(),
-        w1: rnd(.12, .3), w2: rnd(.12, .3), p1: rnd(0, 6.3), p2: rnd(0, 6.3), p3: rnd(0, 6.3), p4: rnd(0, 6.3) });
+        w1: rnd(.12, .3), w2: rnd(.12, .3), p1: rnd(0, 6.3), p2: rnd(0, 6.3), p3: rnd(0, 6.3), p4: rnd(0, 6.3), hide: 0 });
   }
-  const ease = x => x * x * x * (x * (6 * x - 15) + 10);
-  // Noise level: hold clean, rise, hold noisy, fall; zero velocity at every turn.
+  const ease = x => smoother(x);
   function sigma(t) {
     const p = (t % CYCLE) / CYCLE;
     const r = p < .2 ? 0 : p < .45 ? ease((p - .2) / .25) : p < .6 ? 1 : p < .85 ? 1 - ease((p - .6) / .25) : 0;
     return r * SPREAD;
   }
-  function frame(t) {
-    const sg = sigma(t), s = t / 1000;
-    ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = color;
-    const left = (W - 680) / 2, right = left + 680;
-    for (const d of dots) {
-      const nx = (d.ax * Math.cos(d.w1 * s + d.p1) + d.bx * Math.sin(d.w2 * s + d.p2)) * .7071;
-      const ny = (d.ay * Math.cos(d.w2 * s + d.p3) + d.by * Math.sin(d.w1 * s + d.p4)) * .7071;
-      ctx.globalAlpha = d.x > left && d.x < right ? .09 : .24;
-      ctx.beginPath();
-      ctx.arc(d.x + nx * sg, d.y + ny * sg, 1.4, 0, 6.283);
-      ctx.fill();
+  function pos(d, t) {
+    const s = t / 1000, sg = sigma(t);
+    return { x: d.x + (d.ax * Math.cos(d.w1 * s + d.p1) + d.bx * Math.sin(d.w2 * s + d.p2)) * .7071 * sg,
+             y: d.y + (d.ay * Math.cos(d.w2 * s + d.p3) + d.by * Math.sin(d.w1 * s + d.p4)) * .7071 * sg };
+  }
+  const dim = d => { const l = (W - COL) / 2; return d.x > l && d.x < l + COL ? .09 : .24; };
+
+  function textRect(el) { const g = document.createRange(); g.selectNodeContents(el); return g.getBoundingClientRect(); }
+  function sampleName(el, step) {
+    const r = el.getBoundingClientRect(), cs = getComputedStyle(el);
+    const off = document.createElement("canvas"), o = off.getContext("2d");
+    off.width = Math.ceil(r.width); off.height = Math.ceil(r.height);
+    o.font = `${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+    o.letterSpacing = cs.letterSpacing;
+    // Match CSS: the font's content box is centred in the line box, text sits on its baseline.
+    const m = o.measureText(el.textContent), asc = m.fontBoundingBoxAscent, desc = m.fontBoundingBoxDescent;
+    const lh = parseFloat(cs.lineHeight) || r.height;
+    o.textBaseline = "alphabetic"; o.fillStyle = "#000";
+    o.fillText(el.textContent, 0, (lh - asc - desc) / 2 + asc);
+    const data = o.getImageData(0, 0, off.width, off.height).data, pts = [];
+    for (let y = 0; y < off.height; y += step) for (let x = 0; x < off.width; x += step)
+      if (data[(y * off.width + x) * 4 + 3] > 140) pts.push({ x: r.left + x, y: r.top + y });
+    return pts;
+  }
+
+  function start(now) {
+    if (nameEl.classList.contains("show")) return;
+    const tr = textRect(nameEl);
+    if (tr.bottom < 0 || tr.top > H) { reveal(); return; }   // loaded scrolled past the name
+    const target = { x: tr.left - 22, y: tr.top + tr.height / 2 };
+    // Pick the dot whose own path passes closest to the target soon.
+    let best = null, bd = Infinity;
+    for (let ms = SEARCH[0]; ms <= SEARCH[1]; ms += 40) {
+      const t = clock(now + ms);
+      for (const d of dots) {
+        const p = pos(d, t), dd = (p.x - target.x) ** 2 + (p.y - target.y) ** 2;
+        if (dd < bd) { bd = dd; best = { dot: d, arrive: now + ms }; }
+      }
     }
+    const p = pos(best.dot, clock(best.arrive));
+    show = { ...best, lead: Math.min(LEAD, best.arrive - now), target, scroll: scrollY,
+      err: { x: target.x - p.x, y: target.y - p.y }, pts: sampleName(nameEl, W < 520 ? 3 : 2), parts: null };
+  }
+  function end() { if (show) show.dot.hide = 0; show = null; ctx.clearRect(0, 0, W, H); reveal(); }
+
+  function drawShow(now, t) {
+    if (Math.abs(scrollY - show.scroll) > 2) return end();   // scrolled mid-show: just show the name
+    if (now < show.arrive - show.lead) return;
+    const d = show.dot, a = show.target, e = now - show.arrive, D = Math.min(DECEL, 2 * show.lead);
+    // Path time runs 1:1 with the clock, then decelerates to rest exactly at the target.
+    const u = e + D / 2, tau = u <= 0 ? e : u < D ? -D / 2 + u - u * u / (2 * D) : 0;
+    const p = pos(d, clock(show.arrive) + tau), c = smoother(clamp(1 + tau / show.lead));
+    const nx = p.x + show.err.x * c, ny = p.y + show.err.y * c;
+    // Swell begins while the dot is still slowing; the burst begins while it is still swelling.
+    const pe = e + D / 4 - GROW * .55;
+    d.hide = pe < FLY + SETTLE ? 1 : 1 - clamp((pe - FLY - SETTLE) / BACK);
+    const lit = smoother(clamp(1 + e / show.lead)), base = dim(d);
+    const g = smoother(clamp((e + D / 4) / GROW)), leave = smoother(clamp(pe / 700));
+    const rad = (1.4 + 1.6 * lit + 12 * g) * (1 - leave);
+    const alpha = (base + (.9 - base) * lit) * (1 - leave * .7);
+    if (leave < 1) {
+      ctx.fillStyle = accent;
+      ctx.globalAlpha = .18 * alpha * lit; ctx.beginPath(); ctx.arc(nx, ny, rad * 1.9, 0, 6.283); ctx.fill();
+      ctx.globalAlpha = alpha; ctx.beginPath(); ctx.arc(nx, ny, rad, 0, 6.283); ctx.fill();
+    }
+    if (pe > 0) {
+      show.parts ??= show.pts.map(q => {
+        const sx = a.x + gauss() * 3, sy = a.y + gauss() * 3;
+        return { sx, sy, mx: (sx + q.x) / 2 + gauss() * 60, my: (sy + q.y) / 2 + gauss() * 45, tx: q.x, ty: q.y, delay: Math.random() * 450 };
+      });
+      const fade = clamp((pe - FLY - 150) / SETTLE);
+      if (fade < 1) for (const q of show.parts) {
+        const m = inOut(clamp((pe - q.delay) / (FLY - 450)));
+        if (m <= 0) continue;
+        const r = 1 - m, x = r * r * q.sx + 2 * r * m * q.mx + m * m * q.tx, y = r * r * q.sy + 2 * r * m * q.my + m * m * q.ty;
+        ctx.globalAlpha = (1 - fade) * .95; ctx.fillStyle = m > .85 ? ink : accent;
+        ctx.fillRect(x - .9, y - .9, 1.8, 1.8);
+      }
+      if (pe > FLY - 100) reveal();
+    }
+    if (pe > FLY + SETTLE + BACK) end();
+  }
+
+  function frame(now) {
+    zero ??= now;
+    if (pending) { pending = false; start(now); }
+    const t = clock(now);
+    bctx.clearRect(0, 0, W, H); bctx.fillStyle = accent;
+    for (const d of dots) {
+      if (d.hide >= 1) continue;
+      const p = pos(d, t);
+      bctx.globalAlpha = dim(d) * (1 - d.hide);
+      bctx.beginPath(); bctx.arc(p.x, p.y, 1.4, 0, 6.283); bctx.fill();
+    }
+    ctx.clearRect(0, 0, W, H);
+    if (show) drawShow(now, t);
     if (!still) requestAnimationFrame(frame);
   }
-  readColor(); layout();
-  addEventListener("resize", () => { layout(); if (still) frame(0); });
-  new MutationObserver(readColor).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
-  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", readColor);
-  requestAnimationFrame(frame);
+
+  const colors = () => { accent = css("--accent"); ink = css("--ink"); };
+  let lastW = innerWidth;
+  addEventListener("resize", () => {
+    layout();
+    if (innerWidth !== lastW && show) { lastW = innerWidth; end(); }
+    if (still) frame(zero ?? 0);
+  });
+  new MutationObserver(colors).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", colors);
+  colors(); layout();
+  if (still) { requestAnimationFrame(frame); return; }
+  // Never leave the name hidden: fonts are needed to sample the glyphs, so wait for them, but not forever.
+  const go = () => { if (zero === null) requestAnimationFrame(frame); };
+  Promise.race([document.fonts.load('600 43px "Source Serif 4"').then(() => document.fonts.ready), new Promise(r => setTimeout(r, 2500))]).then(go);
+  setTimeout(() => { if (!nameEl.classList.contains("show") && !show) reveal(); }, 9000);
 })();
 </script>
 <script src="/draft.js" defer></script>
